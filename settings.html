@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Black Rock</title>
+  <link rel="stylesheet" href="css/styles-new.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/plans.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <style>
+    .settings-container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+    .settings-header { text-align: center; margin-bottom: 2rem; }
+    .settings-title { font-size: 2.1rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+    .settings-section { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem 1.2rem; margin-bottom: 1.5rem; box-shadow: 0 4px 18px rgba(21,179,122,0.08); }
+    .settings-section h2 { font-size: 1.2rem; color: var(--green); margin-bottom: 1rem; }
+    .profile-info { display:flex; flex-direction:column; gap:0.7rem; margin-bottom:1.2rem; }
+    .profile-status { font-size: 1rem; font-weight:600; color:#ffad33; margin-bottom:0.5rem; }
+    .profile-status.verified { color: var(--green); }
+    .input-row { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem; }
+    .input-row input[type="text"],
+    .input-row input[type="email"],
+    .input-row input[type="password"] {
+      flex: 1; padding: 0.7rem; border-radius:8px; border:1px solid rgba(21,179,122,0.15); background: rgba(255,255,255,0.08); color:#fff; font-size:1rem;
+    }
+    .input-row label { min-width:120px; color:var(--dim); font-weight:500; font-size:1rem; }
+    .settings-btn { background: linear-gradient(135deg, var(--green), #0dd67f); color:#000; border:none; border-radius:8px; padding:0.7rem 1.2rem; font-size:1rem; font-weight:600; cursor:pointer; margin-top:0.5rem; box-shadow:0 4px 12px rgba(21,179,122,0.12); }
+    .settings-btn:hover { background: linear-gradient(135deg, #0dd67f, var(--green)); }
+    .upload-box { background: rgba(255,255,255,0.04); border:1px dashed var(--green); border-radius:10px; padding:1.2rem; text-align:center; color:var(--dim); margin-bottom:1rem; }
+    .upload-box input[type="file"] { margin-top:0.7rem; color:#fff; }
+    .verify-status { font-size:1rem; font-weight:600; color:#ffad33; margin-top:0.7rem; }
+    .verify-status.verified { color: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <div class="settings-header">
+      <h1 class="settings-title">Account Settings</h1>
+      <p style="color:var(--dim);font-size:1.1rem;">Manage your profile, security, and verification</p>
+    </div>
+
+    <!-- Profile Section -->
+    <section class="settings-section" id="profileSection">
+      <h2>Profile Information</h2>
+      <div class="profile-info">
+        <div><strong>Name:</strong> <span id="profileName">Loading...</span></div>
+        <div><strong>Email:</strong> <span id="profileEmail">Loading...</span></div>
+        <div class="profile-status" id="profileVerified">Checking...</div>
+      </div>
+      <div id="verifyEmailBox" style="display:none;"><button class="settings-btn" id="verifyEmailBtn">Verify Email</button></div>
+    </section>
+
+    <!-- Change Password Section -->
+    <section class="settings-section">
+      <h2>Change Password</h2>
+      <form id="changePasswordForm">
+        <div class="input-row"><label for="currentPassword">Current Password</label><input type="password" id="currentPassword" required></div>
+        <div class="input-row"><label for="newPassword">New Password</label><input type="password" id="newPassword" required></div>
+        <button class="settings-btn" type="submit">Change Password</button>
+      </form>
+      <div id="changePasswordMsg" style="margin-top:0.7rem;color:#ffad33;"></div>
+    </section>
+
+    <!-- Real Name & ID Verification Section -->
+    <section class="settings-section" id="accountVerificationSection">
+      <h2>Account Verification</h2>
+      <div id="verificationForm">
+        <form id="verifyForm">
+          <div class="input-row"><label for="realName">Real Name (as on ID)</label><input type="text" id="realName" required></div>
+          <div class="input-row"><label for="nationalId">National ID Number</label><input type="text" id="nationalId" required></div>
+          <div class="input-row"><label for="contactNumber">Contact Number</label><input type="tel" id="contactNumber" required></div>
+          <div class="input-row"><label for="homeAddress">Home Address</label><input type="text" id="homeAddress" required></div>
+          <div class="upload-box"><label for="idUpload">Upload ID Card, Passport, or Driving License</label><br><input type="file" id="idUpload" accept="image/*,.pdf" required></div>
+          <button class="settings-btn" type="submit">Submit for Verification</button>
+        </form>
+        <div class="verify-status" id="verifyStatus">Verification status: Loading...</div>
+      </div>
+
+      <div id="verificationCompleted" style="display: none;">
+        <div style="text-align: center; padding: 40px 20px;">
+          <div style="font-size: 60px; color: var(--green); margin-bottom: 15px;">✓</div>
+          <h3 style="color: var(--green); font-size: 24px; margin: 0 0 15px 0;">Account Fully Verified</h3>
+          <p style="color: #888; font-size: 14px; line-height: 1.6; max-width: 400px; margin: 0 auto;">Your account verification is complete. You now have full access to all platform features including unlimited transactions, unrestricted withdrawals, and premium services.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/auth-shared.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/mobile-utils.js" defer></script>
+  <script src="js/pwa-register.js" defer></script>
+</body>
+</html>

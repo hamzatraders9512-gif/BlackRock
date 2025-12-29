@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Methods - Black Rock</title>
+  <link rel="stylesheet" href="css/styles-new.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg, #0a0e27);
+      color: var(--text, #fff);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .payments-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .payments-header {
+      margin-bottom: 2rem;
+    }
+
+    .payments-header h1 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem;
+      color: #fff;
+    }
+
+    .payments-header p {
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0;
+    }
+
+    .payment-method {
+      background: linear-gradient(135deg, rgba(21, 179, 122, 0.08) 0%, rgba(21, 179, 122, 0.02) 100%);
+      border: 1px solid rgba(21, 179, 122, 0.15);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .payment-method {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    .payment-info h2 {
+      font-size: 1.5rem;
+      margin: 0 0 1rem;
+      color: var(--green, #15b37a);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .payment-info h2 .icon {
+      font-size: 1.8rem;
+    }
+
+    .payment-info p {
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0.5rem 0;
+      line-height: 1.6;
+    }
+
+    .address-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      word-break: break-all;
+      font-family: monospace;
+      color: var(--green, #15b37a);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .address-copy-btn {
+      padding: 6px 12px;
+      background: var(--green, #15b37a);
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .address-copy-btn:hover {
+      background: #12a066;
+      transform: translateY(-1px);
+    }
+
+    .qr-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-display h3 {
+      margin: 0 0 1rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+    }
+
+    .qr-code-container {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .qr-code-container #paymentQRCode {
+      display: block;
+    }
+
+    .qr-note {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+    }
+
+    .warning-box {
+      background: rgba(255, 200, 0, 0.1);
+      border-left: 3px solid #ffc800;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+    }
+
+    .warning-box p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+    }
+
+    .network-badge {
+      display: inline-block;
+      background: rgba(21, 179, 122, 0.2);
+      border: 1px solid rgba(21, 179, 122, 0.4);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--green, #15b37a);
+      margin: 0.5rem 0;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      background: rgba(21, 179, 122, 0.12);
+      border: 1px solid rgba(21, 179, 122, 0.25);
+      color: var(--green, #15b37a);
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin-bottom: 1rem;
+    }
+
+    .back-button:hover {
+      background: var(--green, #15b37a);
+      color: #000;
+    }
+
+    .step-indicator {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      align-items: center;
+    }
+
+    .step-indicator .step {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(21, 179, 122, 0.2);
+      border: 1px solid rgba(21, 179, 122, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: var(--green, #15b37a);
+    }
+
+    .step-indicator .arrow {
+      color: rgba(255, 255, 255, 0.3);
+      font-weight: bold;
+    }
+
+    .deposit-button {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      background: var(--green, #15b37a);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      margin-top: 1rem;
+      text-decoration: none;
+    }
+
+    .deposit-button:hover {
+      background: #12a066;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(21, 179, 122, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="payments-container">
+    <a href="dashboard.html" class="back-button">← Back to Dashboard</a>
+
+    <div class="payments-header">
+      <h1>Payment Methods</h1>
+      <p>All available payment options for deposits and transactions</p>
+    </div>
+
+    <!-- USDT Payment Method -->
+    <div class="payment-method">
+      <div class="payment-info">
+        <h2>
+          <span class="icon">💰</span>
+          USDT (Ethereum ERC20)
+        </h2>
+        <p>Deposit USDT directly to our secure wallet address on the Ethereum network.</p>
+
+        <div class="network-badge">🔗 ERC20 Network - Ethereum Mainnet</div>
+
+        <div class="step-indicator">
+          <div class="step">1</div>
+          <span class="arrow">→</span>
+          <div class="step">2</div>
+          <span class="arrow">→</span>
+          <div class="step">3</div>
+        </div>
+
+        <p style="margin-top: 1rem; font-weight: 600; color: rgba(255, 255, 255, 0.9);">Steps to Deposit:</p>
+        <ol style="margin: 0.5rem 0 1rem; padding-left: 1.5rem; color: rgba(255, 255, 255, 0.7);">
+          <li>Copy the address below</li>
+          <li>Send USDT from your wallet</li>
+          <li>Upload transaction proof</li>
+        </ol>
+
+        <p style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); margin: 1rem 0;">
+          <strong>Minimum Deposit:</strong> $50 USDT
+        </p>
+
+        <div class="address-box">
+          <span id="paymentAddress" style="flex: 1;">0x1eb17E4367F8D6aAF8C3cEC631f8e01103d7A716</span>
+          <button id="copyAddressBtn" class="address-copy-btn">Copy Address</button>
+        </div>
+
+        <div class="warning-box">
+          <p><strong>⚠️ Important:</strong> Only send USDT on the ERC20 network (Ethereum Mainnet). Sending from other networks may result in permanent loss of funds.</p>
+        </div>
+
+        <a href="custom-deposit.html" class="deposit-button">Proceed to Deposit</a>
+      </div>
+
+      <div class="qr-display">
+        <h3>Scan QR Code</h3>
+        <div class="qr-code-container">
+          <div id="paymentQRCode"></div>
+        </div>
+        <p class="qr-note">Scan with your wallet app to auto-fill the address</p>
+      </div>
+    </div>
+
+    <!-- Additional Info Section -->
+    <div style="background: rgba(21, 179, 122, 0.05); border: 1px solid rgba(21, 179, 122, 0.1); border-radius: 12px; padding: 1.5rem; margin-top: 2rem;">
+      <h3 style="margin-top: 0; color: var(--green, #15b37a);">Payment Security</h3>
+      <ul style="margin: 1rem 0; color: rgba(255, 255, 255, 0.7); line-height: 1.8;">
+        <li>All transactions are verified and recorded on the blockchain</li>
+        <li>Your deposit address is unique to your account</li>
+        <li>Upload payment proof to expedite verification</li>
+        <li>Deposits are typically processed within 24 hours</li>
+        <li>Contact support if your deposit is not reflected within 48 hours</li>
+      </ul>
+
+      <h3 style="color: var(--green, #15b37a); margin-top: 1.5rem;">Fees</h3>
+      <p style="color: rgba(255, 255, 255, 0.7);">No additional fees for deposits. Network gas fees (if any) are paid by you directly to the blockchain.</p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
+  <script src="js/deposit-config.js"></script>
+    <script src="js/mobile-utils.js" defer></script>
+  <script>
+    // Initialize payment address display
+    function initializePayments() {
+      const addressElement = document.getElementById('paymentAddress');
+      const qrcodeElement = document.getElementById('paymentQRCode');
+      const copyBtn = document.getElementById('copyAddressBtn');
+
+      // Get deposit address from config
+      let depositAddress = '0x1eb17E4367F8D6aAF8C3cEC631f8e01103d7A716'; // Default
+      if (typeof PAYMENT_CONFIG !== 'undefined' && PAYMENT_CONFIG.DEPOSIT_ADDRESS) {
+        depositAddress = PAYMENT_CONFIG.DEPOSIT_ADDRESS;
+      }
+
+      // Update address display
+      addressElement.textContent = depositAddress;
+
+      // Generate QR code
+      if (typeof QRCode !== 'undefined' && qrcodeElement) {
+        try {
+          const qrStyle = (typeof PAYMENT_CONFIG !== 'undefined' && PAYMENT_CONFIG.QR_STYLE) ? PAYMENT_CONFIG.QR_STYLE : {
+            colorDark: '#00d084',
+            colorLight: 'rgba(22, 33, 62, 0.5)'
+          };
+
+          new QRCode(qrcodeElement, {
+            text: `ethereum:${depositAddress}`,
+            width: 200,
+            height: 200,
+            colorDark: qrStyle.colorDark,
+            colorLight: qrStyle.colorLight,
+            correctLevel: QRCode.CorrectLevel.H
+          });
+        } catch (error) {
+          console.error('QR Code generation error:', error);
+        }
+      }
+
+      // Handle copy button
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(depositAddress).then(() => {
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            copyBtn.style.background = '#4CAF50';
+
+            setTimeout(() => {
+              copyBtn.textContent = originalText;
+              copyBtn.style.background = 'var(--green, #15b37a)';
+            }, 2000);
+          }).catch(() => {
+            copyBtn.textContent = 'Failed to copy';
+            setTimeout(() => {
+              copyBtn.textContent = 'Copy Address';
+            }, 2000);
+          });
+        });
+      }
+    }
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', initializePayments);
+  </script>
+  <script src="js/pwa-register.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <title>Deposit — Black Rock</title>
+    <link rel="stylesheet" href="css/styles-new.css" />
+    <link rel="stylesheet" href="css/deposit.css" />
+     <link rel="stylesheet" href="css/mobile.css" />
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+  </head>
+  <body class="custom-deposit-body">
+    <main class="custom-deposit-container">
+      <header class="custom-deposit-header">
+        <button id="backBtn" class="back-button" aria-label="Go back">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <div class="header-title">
+          <h1>Deposit</h1>
+          <p class="header-subtitle">Deposit USDT (ERC20)</p>
+        </div>
+        <div class="header-spacer"></div>
+      </header>
+
+      <div class="custom-deposit-content">
+        <!-- Step 1: Address & QR (showing immediately) -->
+        <section class="deposit-step" id="addressStep">
+          <div class="step-header">
+            <span class="step-number">1</span>
+            <h2>Send USDT to Address</h2>
+          </div>
+          <div class="address-display-section">
+            <div class="network-badge">
+              <span class="network-icon">🔗</span>
+              <span class="network-name">ERC20 Network</span>
+            </div>
+            <div class="amount-display-card">
+              <p class="amount-display-label">Amount to Send</p>
+              <p class="amount-display-value" id="displayAmount">0.00 USDT</p>
+            </div>
+            <div class="address-card-custom">
+              <div class="address-card-label">Deposit Address</div>
+              <code id="depositAddressDisplay" class="address-text">--</code>
+              <button id="copyAddressBtnCustom" class="btn-copy-custom" aria-label="Copy deposit address">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                </svg>
+                <span>Copy</span>
+              </button>
+            </div>
+            <div class="qr-code-section">
+              <p class="qr-label">Scan to Send</p>
+              <div id="qrCode" class="qr-code-placeholder"></div>
+              <p class="qr-note">Scan QR code with your wallet app to auto-fill address</p>
+            </div>
+            <div class="warning-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              <div class="warning-text">
+                <p class="warning-title">⚠️ Important</p>
+                <p class="warning-message">Only send USDT on ERC20 network. Other networks may result in permanent loss of funds.</p>
+              </div>
+            </div>
+          </div>
+          <button id="nextToProofBtn" class="btn-proceed">I've Sent the Amount</button>
+        </section>
+
+        <!-- Step 2: Upload Proof -->
+        <section class="deposit-step" id="proofStep" style="display: none;">
+          <div class="step-header">
+            <span class="step-number">2</span>
+            <h2>Upload Payment Proof</h2>
+          </div>
+          <div class="proof-upload-section">
+            <div class="upload-area-custom">
+              <input id="proofFileInput" type="file" accept="image/*,.pdf" class="file-input-hidden" aria-label="Upload payment proof screenshot" />
+              <label for="proofFileInput" class="upload-label-custom">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <p class="upload-text">Tap to Upload Screenshot</p>
+                <p class="upload-subtext">PNG, JPG, or PDF (Max 5MB)</p>
+              </label>
+            </div>
+            <div id="filePreviewContainer" class="file-preview-container" style="display: none;"></div>
+            <div id="uploadStatus" class="upload-status" style="display: none;"></div>
+            <div id="fileInfo" class="file-info" style="display: none;">
+              <p id="fileName" class="file-name"></p>
+              <p id="fileSize" class="file-size"></p>
+            </div>
+          </div>
+          <button id="confirmDepositBtn" class="btn-proceed" disabled>Confirm Deposit</button>
+        </section>
+
+        <!-- Success Message -->
+        <section class="deposit-step" id="successStep" style="display: none;">
+          <div class="success-container">
+            <div class="success-icon">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <h2 class="success-title">Deposit Submitted!</h2>
+            <p class="success-message">Your payment proof has been uploaded successfully. Our team will verify and process your deposit within 24 hours.</p>
+            <div class="success-details">
+              <div class="detail-item">
+                <span class="detail-label">Amount:</span>
+                <span class="detail-value" id="successAmount">0.00 USDT</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Network:</span>
+                <span class="detail-value">ERC20</span>
+              </div>
+            </div>
+          </div>
+          <button id="goToDashboardBtn" class="btn-proceed">Go to Dashboard</button>
+        </section>
+      </div>
+
+      <footer class="custom-deposit-footer">
+        <p class="footer-text">Questions? <a href="#" class="footer-link">Contact Support</a></p>
+      </footer>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p id="loadingText">Processing...</p>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="vendor/qrcode.min.js"></script>
+    <script src="js/deposit-config.js"></script>
+    <script src="js/auth-shared.js"></script>
+    <script src="js/deposit.js"></script>
+     <script src="js/mobile-utils.js" defer></script>
+    <script src="js/pwa-register.js" defer></script>
+  </body>
+</html>

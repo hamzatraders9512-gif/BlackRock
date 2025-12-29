@@ -1,0 +1,98 @@
+/* Mobile-first responsive overrides for Black Rock app */
+/* Keep rules scoped and non-destructive so they safely override existing styles */
+
+:root {
+  --touch-target: 48px;
+}
+
+/* Utility container for consistent horizontal padding on small screens */
+.container-sm {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+}
+
+/* Make interactive elements easier to tap */
+button, .btn, .google-btn, .sign-in, .continue-btn {
+  min-height: var(--touch-target);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Inputs: increase hit area and font-size for readability */
+.input-field {
+  padding: 0.75rem 0.8rem;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+/* Make terminal/card width fill small screens more naturally */
+.terminal-window {
+  max-width: 100% !important;
+  margin: 0 auto;
+  padding-left: 0.9rem !important;
+  padding-right: 0.9rem !important;
+}
+
+/* Form spacing tweaks for easy scrolling */
+.form { gap: 0.65rem; }
+.divider { margin: 0.5rem 0; }
+
+/* Responsive tables and wide content */
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; }
+
+/* Cards and grids collapse to single column on small viewports */
+@media (max-width: 720px) {
+  #statCards { grid-template-columns: 1fr !important; gap: 0.85rem; }
+  .dashboard-container { max-width: 100% !important; padding: 0.75rem !important; }
+  .dashboard-header { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .header-left, .header-right { width: 100%; }
+  .header-actions { justify-content: flex-start; }
+  .welcome-section { padding: 0.9rem; }
+  .logo-text { font-size: 1.25rem; }
+}
+
+/* Extra small devices adjustments */
+@media (max-width: 420px) {
+  body { font-size: 15px; }
+  .logo-text { font-size: 1.1rem; }
+  .google-btn { font-size: 0.95rem; padding: 0.6rem; }
+  .input-label { font-size: 0.9rem; }
+  .pw-requirements { font-size: 0.85rem; }
+  .theme-toggle { padding: 6px 8px; }
+}
+
+/* Hide non-essential desktop elements that may crowd the small screen */
+@media (max-width: 800px) {
+  .sidebar, .desktop-only { display: none !important; }
+}
+
+/* Accessibility: ensure focus states are visible on touch devices */
+:focus { outline: 3px solid rgba(21,179,122,0.18); outline-offset: 2px; }
+
+/* Mobile nav toggle and desktop-only collapse behavior */
+.mobile-nav-toggle {
+  position: fixed;
+  left: 12px;
+  top: 12px;
+  z-index: 1200;
+  background: var(--card-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.mobile-nav-toggle svg { width: 18px; height: 18px; }
+
+/* Anything marked desktop-only will be hidden when collapsed */
+.desktop-only.collapsed { display: none !important; }
+
+@media (min-width: 801px) {
+  .mobile-nav-toggle { display: none !important; }
+}

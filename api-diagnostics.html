@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Diagnostics - Black Rock</title>
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #00d084;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .test-section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #00d084;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .test-item {
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background: rgba(0, 208, 132, 0.1);
+      border-left: 4px solid #00d084;
+    }
+
+    .test-item.error {
+      background: rgba(255, 107, 53, 0.1);
+      border-left-color: #ff6b35;
+    }
+
+    .test-item.warning {
+      background: rgba(255, 193, 7, 0.1);
+      border-left-color: #ffc107;
+    }
+
+    .test-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #00d084;
+    }
+
+    .test-label.error {
+      color: #ff6b35;
+    }
+
+    .test-label.warning {
+      color: #ffc107;
+    }
+
+    .test-status {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    button {
+      background: #00d084;
+      color: #1a1a2e;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #00b870;
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .button-group {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #00d084;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.6s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .info {
+      background: rgba(0, 208, 132, 0.1);
+      border-left: 4px solid #00d084;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 API Diagnostics</h1>
+
+    <div class="info">
+      <p>This page tests all API endpoints to help diagnose connection issues.</p>
+      <p><strong>Last Updated:</strong> <span id="timestamp">-</span></p>
+    </div>
+
+    <div class="button-group">
+      <button onclick="runAllTests()">🚀 Run All Tests</button>
+      <button onclick="clearResults()">🗑️ Clear Results</button>
+    </div>
+
+    <div class="test-section">
+      <h2 style="color: #00d084; margin-bottom: 15px;">API Endpoints</h2>
+      
+      <div id="health-test" class="test-item">
+        <div class="test-label">Health Check</div>
+        <div class="test-status">Not tested yet</div>
+      </div>
+
+      <div id="cloudinary-config-test" class="test-item">
+        <div class="test-label">Cloudinary Config</div>
+        <div class="test-status">Not tested yet</div>
+      </div>
+
+      <div id="custom-deposit-test" class="test-item">
+        <div class="test-label">Custom Deposit Endpoint</div>
+        <div class="test-status">Not tested yet</div>
+      </div>
+
+      <div id="auth-status-test" class="test-item">
+        <div class="test-label">Auth Status</div>
+        <div class="test-status">Not tested yet</div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2 style="color: #00d084; margin-bottom: 15px;">Network Information</h2>
+      
+      <div class="test-item">
+        <div class="test-label">Current URL</div>
+        <code id="current-url">-</code>
+      </div>
+
+      <div class="test-item">
+        <div class="test-label">Server Base URL</div>
+        <code id="base-url">http://localhost:3000</code>
+      </div>
+
+      <div class="test-item">
+        <div class="test-label">Browser Online Status</div>
+        <div id="online-status">Checking...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const BASE_URL = 'http://localhost:3000';
+
+    function updateTimestamp() {
+      document.getElementById('timestamp').textContent = new Date().toLocaleString();
+    }
+
+    function updateNetworkInfo() {
+      document.getElementById('current-url').textContent = window.location.href;
+      const onlineStatus = navigator.onLine ? '✅ Online' : '❌ Offline';
+      document.getElementById('online-status').innerHTML = onlineStatus;
+    }
+
+    async function testHealthCheck() {
+      const element = document.getElementById('health-test');
+      const statusDiv = element.querySelector('.test-status');
+      statusDiv.innerHTML = '<span class="spinner"></span>Testing...';
+
+      try {
+        const response = await fetch(`${BASE_URL}/api/health`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          element.classList.remove('error', 'warning');
+          statusDiv.innerHTML = `✅ <strong>OK</strong><br>Status: ${data.status}<br>Time: ${data.timestamp}`;
+        } else {
+          element.classList.add('error');
+          statusDiv.innerHTML = `❌ <strong>Error ${response.status}</strong><br>${data.message}`;
+        }
+      } catch (error) {
+        element.classList.add('error');
+        statusDiv.innerHTML = `❌ <strong>Failed to fetch</strong><br>Error: ${error.message}`;
+      }
+    }
+
+    async function testCloudinaryConfig() {
+      const element = document.getElementById('cloudinary-config-test');
+      const statusDiv = element.querySelector('.test-status');
+      statusDiv.innerHTML = '<span class="spinner"></span>Testing...';
+
+      try {
+        const response = await fetch(`${BASE_URL}/api/cloudinary/config`);
+        const data = await response.json();
+        
+        if (response.ok && data.configured) {
+          element.classList.remove('error', 'warning');
+          statusDiv.innerHTML = `✅ <strong>OK</strong><br>Cloud: ${data.cloudName}<br>Preset: ${data.uploadPreset}`;
+        } else if (response.ok) {
+          element.classList.add('warning');
+          statusDiv.innerHTML = `⚠️ <strong>Not Configured</strong><br>${data.message}`;
+        } else {
+          element.classList.add('error');
+          statusDiv.innerHTML = `❌ <strong>Error ${response.status}</strong><br>${data.message}`;
+        }
+      } catch (error) {
+        element.classList.add('error');
+        statusDiv.innerHTML = `❌ <strong>Failed to fetch</strong><br>Error: ${error.message}`;
+      }
+    }
+
+    async function testCustomDepositEndpoint() {
+      const element = document.getElementById('custom-deposit-test');
+      const statusDiv = element.querySelector('.test-status');
+      statusDiv.innerHTML = '<span class="spinner"></span>Testing...';
+
+      try {
+        const testData = {
+          amount: 50,
+          depositAddress: '0x1234567890abcdef',
+          proofUrl: 'https://example.com/proof.png',
+          fileName: 'proof.png',
+          fileSize: 1024
+        };
+
+        const response = await fetch(`${BASE_URL}/api/deposits/custom-submit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(testData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          element.classList.remove('error', 'warning');
+          statusDiv.innerHTML = `✅ <strong>OK</strong><br>Deposit ID: ${data.depositId}<br>Status: ${data.success ? 'Accepted' : 'Failed'}`;
+        } else if (response.status === 401) {
+          element.classList.add('warning');
+          statusDiv.innerHTML = `⚠️ <strong>Not Authenticated</strong><br>${data.message}`;
+        } else {
+          element.classList.add('error');
+          statusDiv.innerHTML = `❌ <strong>Error ${response.status}</strong><br>${data.message}`;
+        }
+      } catch (error) {
+        element.classList.add('error');
+        statusDiv.innerHTML = `❌ <strong>Failed to fetch</strong><br>Error: ${error.message}`;
+      }
+    }
+
+    async function testAuthStatus() {
+      const element = document.getElementById('auth-status-test');
+      const statusDiv = element.querySelector('.test-status');
+      statusDiv.innerHTML = '<span class="spinner"></span>Testing...';
+
+      try {
+        const response = await fetch(`${BASE_URL}/api/auth/status`, {
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          if (data.isAuthenticated) {
+            element.classList.remove('error', 'warning');
+            statusDiv.innerHTML = `✅ <strong>Authenticated</strong><br>User: ${data.user?.email || 'Unknown'}`;
+          } else {
+            element.classList.add('warning');
+            statusDiv.innerHTML = `⚠️ <strong>Not Authenticated</strong><br>Please log in first`;
+          }
+        } else {
+          element.classList.add('error');
+          statusDiv.innerHTML = `❌ <strong>Error ${response.status}</strong>`;
+        }
+      } catch (error) {
+        element.classList.add('error');
+        statusDiv.innerHTML = `❌ <strong>Failed to fetch</strong><br>Error: ${error.message}`;
+      }
+    }
+
+    async function runAllTests() {
+      updateTimestamp();
+      await testHealthCheck();
+      await testCloudinaryConfig();
+      await testAuthStatus();
+      await testCustomDepositEndpoint();
+    }
+
+    function clearResults() {
+      document.querySelectorAll('.test-item').forEach(item => {
+        item.classList.remove('error', 'warning');
+        item.querySelector('.test-status').textContent = 'Not tested yet';
+      });
+    }
+
+    // Initialize on page load
+    window.addEventListener('load', () => {
+      updateNetworkInfo();
+      updateTimestamp();
+    });
+
+    // Auto-update timestamp every second
+    setInterval(updateTimestamp, 1000);
+  </script>
+  <script src="js/mobile-utils.js" defer></script>
+  <script src="js/pwa-register.js" defer></script>
+</body>
+</html>

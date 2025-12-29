@@ -1,0 +1,1592 @@
+/* Full Deposit styles (ported from custom-deposit.css) */
+
+:root {
+  --primary: #00d084;
+  --primary-dark: #00a366;
+  --secondary: #ff6b35;
+  --success: #00d084;
+  --warning: #ffa500;
+  --error: #ff3838;
+  --bg: #1a1a2e;
+  --bg-light: #16213e;
+  --text: #ffffff;
+  --text-dim: #b0b0b0;
+  --border: #2a2a4e;
+  --green: #00d084;
+  --orange: #ff6b35;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+body.custom-deposit-body,
+body {
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.custom-deposit-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+
+/* Header Styling */
+.custom-deposit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: rgba(22, 33, 62, 0.95);
+  border-bottom: 1px solid rgba(0, 208, 132, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 1rem;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+.back-button:active {
+  color: var(--green);
+}
+
+.header-title {
+  flex: 1;
+  text-align: center;
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.header-spacer {
+  width: 2.5rem;
+  flex-shrink: 0;
+}
+
+/* Main Content */
+.custom-deposit-content {
+  flex: 1;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.deposit-step {
+  margin-bottom: 2rem;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: linear-gradient(135deg, var(--green) 0%, var(--primary-dark) 100%);
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  color: #1a1a2e;
+}
+
+.step-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Amount Input Section */
+.amount-input-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.amount-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amount-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.amount-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  color: var(--text);
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: right;
+  padding-right: 4rem;
+  outline: none;
+  transition: all 0.3s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.amount-input:focus {
+  border-color: var(--green);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 208, 132, 0.1);
+}
+
+.amount-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Remove spinner for number input on Chrome, Safari, Edge, Opera */
+.amount-input::-webkit-outer-spin-button,
+.amount-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.amount-input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.amount-currency {
+  position: absolute;
+  right: 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--green);
+  pointer-events: none;
+}
+
+.amount-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  padding: 0.75rem;
+  background: rgba(255, 165, 0, 0.1);
+  border-left: 2px solid var(--warning);
+  border-radius: 0.5rem;
+}
+
+.amount-info svg {
+  flex-shrink: 0;
+  color: var(--warning);
+}
+
+/* Address Display Section */
+.address-display-section {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.network-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 208, 132, 0.15);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  width: fit-content;
+  color: var(--green);
+}
+
+.network-icon {
+  font-size: 1rem;
+}
+
+.amount-display-card {
+  background: rgba(0, 208, 132, 0.1);
+  border-left: 3px solid var(--green);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.amount-display-label {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amount-display-value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.address-card-custom {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.address-card-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.address-text {
+  display: block;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+  color: var(--green);
+}
+
+.btn-copy-custom {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, rgba(0, 208, 132, 0.2) 0%, rgba(0, 208, 132, 0.1) 100%);
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.btn-copy-custom:active {
+  background: rgba(0, 208, 132, 0.3);
+  transform: scale(0.98);
+}
+
+/* QR Code Section */
+.qr-code-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.qr-label {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.qr-code-placeholder {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px dashed rgba(0, 208, 132, 0.3);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  margin-bottom: 1rem;
+}
+
+.qr-code-placeholder canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+.qr-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* Warning Box */
+.warning-box {
+  display: flex;
+  gap: 1rem;
+  background: rgba(255, 165, 0, 0.1);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  border-left: 3px solid var(--warning);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.warning-box svg {
+  flex-shrink: 0;
+  color: var(--warning);
+  margin-top: 0.25rem;
+}
+
+.warning-text {
+  flex: 1;
+}
+
+.warning-title {
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.warning-message {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* Upload Section */
+.proof-upload-section {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.upload-area-custom {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.upload-label-custom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(0, 208, 132, 0.4);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.upload-label-custom:active {
+  background: rgba(0, 208, 132, 0.15);
+  border-color: var(--green);
+}
+
+.upload-label-custom svg {
+  color: var(--green);
+}
+
+.upload-text {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.upload-subtext {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* File Preview */
+.file-preview-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 208, 132, 0.1);
+  background: rgba(0, 208, 132, 0.05);
+}
+
+.preview-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-remove-file {
+  background: rgba(255, 56, 56, 0.15);
+  border: 1px solid rgba(255, 56, 56, 0.3);
+  color: var(--error);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn-remove-file:active {
+  background: rgba(255, 56, 56, 0.25);
+}
+
+.preview-content {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.preview-content img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 0.5rem;
+  object-fit: contain;
+}
+
+.preview-content .pdf-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--orange);
+}
+
+.preview-content .pdf-icon svg {
+  width: 60px;
+  height: 60px;
+}
+
+/* Upload Status */
+.upload-status {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.upload-status.loading {
+  background: rgba(0, 208, 132, 0.1);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+}
+
+.upload-status.loading .status-message {
+  color: var(--green);
+  font-weight: 500;
+}
+
+.upload-status.success {
+  background: rgba(0, 208, 132, 0.15);
+  border: 1px solid rgba(0, 208, 132, 0.4);
+}
+
+.upload-status.success .status-message {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.upload-status.error {
+  background: rgba(255, 56, 56, 0.1);
+  border: 1px solid rgba(255, 56, 56, 0.3);
+}
+
+.upload-status.error .status-message {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.status-message {
+  margin: 0;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* File Info */
+.file-info {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--green);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.file-name,
+.file-size {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.file-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Success Container */
+.success-container {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: rgba(0, 208, 132, 0.15);
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  color: var(--green);
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.success-icon svg {
+  width: 48px;
+  height: 48px;
+  stroke-width: 2;
+}
+
+.success-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.success-message {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.success-details {
+  background: rgba(0, 208, 132, 0.1);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 208, 132, 0.1);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Buttons */
+.btn-proceed {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--green) 0%, var(--primary-dark) 100%);
+  border: none;
+  border-radius: 0.75rem;
+  color: #1a1a2e;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(0, 208, 132, 0.3);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.btn-proceed:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 8px rgba(0, 208, 132, 0.2);
+}
+
+.btn-proceed:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-proceed:disabled:active {
+  transform: none;
+}
+
+/* Footer */
+.custom-deposit-footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid rgba(0, 208, 132, 0.1);
+  background: rgba(22, 33, 62, 0.95);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.footer-text {
+  margin: 0;
+}
+
+.footer-link {
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.footer-link:active {
+  color: var(--primary-dark);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.loading-spinner {
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 208, 132, 0.2);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+#loadingText {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+/* Toast Container */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: slideUp 0.3s ease-out;
+  pointer-events: auto;
+  max-width: 100%;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast.success {
+  background: rgba(0, 208, 132, 0.2);
+  border: 1px solid rgba(0, 208, 132, 0.5);
+  color: var(--success);
+}
+
+.toast.error {
+  background: rgba(255, 56, 56, 0.2);
+  border: 1px solid rgba(255, 56, 56, 0.5);
+  color: var(--error);
+}
+
+.toast.info {
+  background: rgba(100, 150, 255, 0.2);
+  border: 1px solid rgba(100, 150, 255, 0.5);
+  color: #6496ff;
+}
+
+/* Responsive Design for Tablets */
+@media (min-width: 600px) {
+  .custom-deposit-content {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .deposit-step {
+    margin-bottom: 2.5rem;
+  }
+
+  .amount-input {
+    font-size: 2rem;
+  }
+
+  .btn-proceed {
+    padding: 1.25rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+  .custom-deposit-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .header-title h1 {
+    font-size: 1rem;
+  }
+
+  .custom-deposit-content {
+    padding: 1rem;
+  }
+
+  .deposit-step {
+    margin-bottom: 1rem;
+  }
+
+  .amount-input-wrapper,
+  .address-display-section,
+  .proof-upload-section {
+    padding: 1rem;
+  }
+
+  .qr-code-placeholder {
+    min-height: 150px;
+  }
+}
+
+/* Safe Area for notched devices */
+@supports (padding: max(0px)) {
+  .custom-deposit-header {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .custom-deposit-content {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .custom-deposit-footer {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+.deposit-address-card::before,
+.upload-proof-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0)
+  );
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.plan-summary-card:hover,
+.deposit-address-card:hover,
+.upload-proof-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 36px 0 rgba(21, 179, 122, 0.1);
+}
+
+/* Plan Summary Card */
+.plan-summary-card {
+  background: linear-gradient(135deg, rgba(21, 179, 122, 0.08), rgba(255, 255, 255, 0.03));
+  border-color: rgba(21, 179, 122, 0.2);
+}
+
+.plan-summary-title {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.plan-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: var(--dim);
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.amount-highlight {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.status-pending {
+  color: var(--orange);
+  background: rgba(255, 127, 42, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+/* Deposit Address Section */
+.section-title {
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.section-subtitle {
+  font-size: 0.9rem;
+  color: var(--dim);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.address-container {
+  margin-bottom: 1.5rem;
+}
+
+.address-box {
+  background: rgba(21, 179, 122, 0.05);
+  border: 1px solid rgba(21, 179, 122, 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.address-label {
+  color: var(--dim);
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.address-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  padding: 0.75rem;
+  position: relative;
+}
+
+.address-code {
+  color: var(--green);
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  word-break: break-all;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.copy-btn {
+  background: rgba(21, 179, 122, 0.15);
+  border: 1px solid rgba(21, 179, 122, 0.3);
+  color: var(--green);
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  background: rgba(21, 179, 122, 0.25);
+  border-color: rgba(21, 179, 122, 0.5);
+  transform: scale(1.05);
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
+}
+
+.copy-btn.copied {
+  background: rgba(21, 179, 122, 0.3);
+}
+
+.address-note {
+  color: var(--dim);
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.address-note strong {
+  color: var(--green);
+}
+
+/* QR Section */
+.qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.qr-label {
+  color: var(--dim);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+}
+
+.qr-placeholder {
+  width: 150px;
+  height: 150px;
+  background: rgba(21, 179, 122, 0.05);
+  border: 1px dashed rgba(21, 179, 122, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Upload Proof Section */
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.file-input-wrapper {
+  position: relative;
+}
+
+.file-input-wrapper input[type="file"] {
+  display: none;
+}
+
+.file-input-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 1.5rem;
+  border: 2px dashed rgba(21, 179, 122, 0.2);
+  border-radius: 8px;
+  background: rgba(21, 179, 122, 0.03);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-input-label:hover {
+  border-color: rgba(21, 179, 122, 0.4);
+  background: rgba(21, 179, 122, 0.08);
+}
+
+.file-input-label svg {
+  color: var(--green);
+  opacity: 0.7;
+}
+
+.upload-text {
+  color: #ffffff;
+  text-align: center;
+}
+
+.upload-text strong {
+  color: var(--green);
+}
+
+.upload-hint {
+  color: var(--dim);
+  font-size: 0.8rem;
+}
+
+.file-preview {
+  position: relative;
+  width: 100%;
+  border: 1px solid rgba(21, 179, 122, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: rgba(21, 179, 122, 0.05);
+}
+
+.file-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 6px;
+  display: block;
+}
+
+.remove-file-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: #ff5c5c;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-file-btn:hover {
+  background: rgba(255, 0, 0, 0.3);
+  border-color: rgba(255, 0, 0, 0.5);
+}
+
+/* Form Elements */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.form-input,
+.form-textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: rgba(21, 179, 122, 0.3);
+  background: rgba(21, 179, 122, 0.05);
+  box-shadow: 0 0 0 3px rgba(21, 179, 122, 0.1);
+}
+
+.form-hint {
+  color: var(--dim);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(135deg, var(--green), #0dd67f);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(21, 179, 122, 0.4);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Confirmation Modal */
+.confirm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.confirm-modal-backdrop.active {
+  display: flex;
+}
+
+.confirm-modal {
+  width: 420px;
+  max-width: calc(100% - 32px);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 1.5rem;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+
+.confirm-modal h3 {
+  margin: 0 0 1.25rem 0;
+  font-size: 1.25rem;
+  color: #ffffff;
+}
+
+.confirmation-details {
+  background: rgba(21, 179, 122, 0.05);
+  border: 1px solid rgba(21, 179, 122, 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.confirm-row:last-child {
+  border-bottom: none;
+}
+
+.confirm-label {
+  color: var(--dim);
+  font-size: 0.9rem;
+}
+
+.confirm-value {
+  color: #ffffff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.confirm-value svg {
+  color: var(--green);
+}
+
+.confirmation-message {
+  color: var(--dim);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn.secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text);
+}
+
+.btn.secondary:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.btn.primary {
+  background: linear-gradient(135deg, var(--green), #0dd67f);
+  color: #000;
+}
+
+.btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(21, 179, 122, 0.3);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Footer */
+.deposit-footer {
+  text-align: center;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-text {
+  color: var(--dim);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.footer-link {
+  color: var(--green);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.footer-link:hover {
+  opacity: 0.8;
+}
+
+.security {
+  margin-top: 1rem;
+  color: var(--dim);
+  font-size: 0.8rem;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dot {
+  color: var(--green);
+  font-size: 1.2em;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .deposit-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .deposit-header {
+    margin-bottom: 2rem;
+  }
+
+  .deposit-title {
+    font-size: 1.75rem;
+  }
+
+  .deposit-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .plan-summary-card,
+  .deposit-address-card,
+  .upload-proof-card {
+    padding: 1.25rem;
+  }
+
+  .file-input-label {
+    padding: 1.5rem 1rem;
+  }
+
+  .confirm-modal {
+    width: calc(100% - 32px);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .deposit-container {
+    padding: 1rem;
+  }
+
+  .deposit-title {
+    font-size: 1.5rem;
+  }
+
+  .plan-summary-card,
+  .deposit-address-card,
+  .upload-proof-card {
+    padding: 1rem;
+  }
+
+  .address-display {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .copy-btn {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .file-input-label {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .address-code {
+    font-size: 0.75rem;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .plan-summary-card,
+  .deposit-address-card,
+  .upload-proof-card {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .plan-summary-card:hover,
+  .deposit-address-card:hover,
+  .upload-proof-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+}
+
+/* New mobile-first styles for the simplified Deposit page */
+.deposit-page{min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px;background:var(--bg);color:var(--text)}
+.deposit-top{width:100%;max-width:420px;text-align:left}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.logo-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(90deg,var(--green),var(--orange));display:flex;align-items:center;justify-content:center;color:#04120f;font-weight:700}
+.logo-text{font-weight:700}
+.title{font-size:20px;margin:6px 0}
+.subtitle{color:var(--dim);font-size:13px;margin-bottom:12px}
+.deposit-form{width:100%;max-width:420px;display:flex;flex-direction:column;gap:12px}
+.amount-input{width:100%;padding:14px 12px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:var(--text);font-size:16px}
+.address-card{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+.address-left{display:flex;flex-direction:column}
+.address-label{font-size:12px;color:var(--dim);margin-bottom:6px}
+.address-code{font-family:monospace;background:transparent;color:var(--green);font-size:14px;word-break:break-all}
+.btn-copy{background:var(--green);color:#04120f;padding:8px 12px;border-radius:10px;border:none;font-weight:700}
+.upload-area{display:flex;flex-direction:column;gap:8px}
+.upload-btn{display:inline-block;padding:12px;border-radius:12px;background:transparent;border:1px dashed rgba(255,255,255,0.04);color:var(--dim);text-align:center}
+#proofFile{display:none}
+.file-preview{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,0.02);border-radius:10px}
+.file-preview img{max-width:80px;border-radius:8px}
+.remove-file{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--dim);padding:6px;border-radius:8px}
+.confirm-btn{margin-top:8px;padding:14px;border-radius:12px;background:linear-gradient(90deg,var(--green),var(--orange));border:none;color:#04120f;font-weight:800;font-size:16px}
+.deposit-footer{width:100%;max-width:420px;text-align:center;color:var(--dim);font-size:13px;margin-top:6px}
+
+@media (min-width:600px){.deposit-page{padding:28px}}

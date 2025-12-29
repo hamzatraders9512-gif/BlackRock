@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Black Rock</title>
+  <link rel="stylesheet" href="css/styles-new.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg, #0a0e27);
+      color: var(--text, #fff);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .admin-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .admin-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .logout-btn {
+      padding: 0.6rem 1.2rem;
+      background: transparent;
+      border: 1px solid var(--green, #15b37a);
+      color: var(--green, #15b37a);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: rgba(21, 179, 122, 0.1);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      color: var(--green, #15b37a);
+      border-bottom-color: var(--green, #15b37a);
+    }
+
+    .tab-btn:hover {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .transactions-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .transaction-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .card-header {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .card-type {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: rgba(0, 208, 132, 0.2);
+      color: var(--green, #15b37a);
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .card-detail {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .detail-label {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+
+    .detail-value {
+      font-weight: 600;
+      word-break: break-all;
+    }
+
+    .card-footer {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-approve {
+      background: var(--green, #15b37a);
+      color: #000;
+    }
+
+    .btn-approve:hover {
+      background: #12a066;
+    }
+
+    .btn-reject {
+      background: rgba(255, 56, 56, 0.2);
+      color: #ff3838;
+      border: 1px solid #ff3838;
+    }
+
+    .btn-reject:hover {
+      background: rgba(255, 56, 56, 0.3);
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top-color: var(--green, #15b37a);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+      .transaction-card {
+        grid-template-columns: 1fr;
+      }
+
+      .card-detail {
+        flex-direction: column;
+      }
+
+      .card-footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1>Admin Panel</h1>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="deposits">Deposits</button>
+      <button class="tab-btn" data-tab="plans">Plans</button>
+      <button class="tab-btn" data-tab="withdrawals">Withdrawals</button>
+    </div>
+
+    <!-- Deposits Tab -->
+    <div id="deposits" class="tab-content active">
+      <div id="depositsLoading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading pending deposits...</p>
+      </div>
+      <div id="depositsList" class="transactions-grid" style="display: none;"></div>
+      <div id="depositsEmpty" class="empty-message" style="display: none;">
+        <p>No pending deposits</p>
+      </div>
+    </div>
+
+    <!-- Plans Tab -->
+    <div id="plans" class="tab-content">
+      <div id="plansLoading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading pending plans...</p>
+      </div>
+      <div id="plansList" class="transactions-grid" style="display: none;"></div>
+      <div id="plansEmpty" class="empty-message" style="display: none;">
+        <p>No pending plan enrollments</p>
+      </div>
+    </div>
+
+    <!-- Withdrawals Tab -->
+    <div id="withdrawals" class="tab-content">
+      <div id="withdrawalsLoading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading pending withdrawals...</p>
+      </div>
+      <div id="withdrawalsList" class="transactions-grid" style="display: none;"></div>
+      <div id="withdrawalsEmpty" class="empty-message" style="display: none;">
+        <p>No pending withdrawals</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    let transactionData = {
+      deposits: [],
+      plans: [],
+      withdrawals: []
+    };
+
+    // Tab switching
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabName = btn.dataset.tab;
+        
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        btn.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+      });
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
+        .then(() => window.location.href = '/index.html');
+    });
+
+    async function loadPendingTransactions() {
+      try {
+        const response = await fetch('/api/admin/pending-transactions', {
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load transactions');
+        }
+
+        transactionData = await response.json();
+        
+        renderDeposits();
+        renderPlans();
+        renderWithdrawals();
+      } catch (error) {
+        console.error('Error loading transactions:', error);
+        document.getElementById('depositsLoading').innerHTML = '<p>Error loading transactions. Please try again.</p>';
+      }
+    }
+
+    function renderDeposits() {
+      const container = document.getElementById('depositsList');
+      const loading = document.getElementById('depositsLoading');
+      const empty = document.getElementById('depositsEmpty');
+
+      if (transactionData.deposits.length === 0) {
+        container.style.display = 'none';
+        loading.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+
+      container.style.display = 'grid';
+      loading.style.display = 'none';
+      empty.style.display = 'none';
+
+      container.innerHTML = transactionData.deposits.map(dep => `
+        <div class="transaction-card">
+          <div class="card-header">
+            <h3 class="card-title">${dep.planName}</h3>
+            <span class="card-type">Deposit</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">User:</span>
+            <span class="detail-value">${dep.userId}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Amount:</span>
+            <span class="detail-value">$${dep.amount.toFixed(2)}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Address:</span>
+            <span class="detail-value">${dep.depositAddress.substring(0, 20)}...</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Submitted:</span>
+            <span class="detail-value">${new Date(dep.submittedAt).toLocaleString()}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Proof:</span>
+            <span class="detail-value">${dep.proofFileName}</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-approve" onclick="approveDeposit('${dep._id}')">Approve</button>
+            <button class="btn btn-reject" onclick="rejectDeposit('${dep._id}')">Reject</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderPlans() {
+      const container = document.getElementById('plansList');
+      const loading = document.getElementById('plansLoading');
+      const empty = document.getElementById('plansEmpty');
+
+      if (transactionData.plans.length === 0) {
+        container.style.display = 'none';
+        loading.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+
+      container.style.display = 'grid';
+      loading.style.display = 'none';
+      empty.style.display = 'none';
+
+      container.innerHTML = transactionData.plans.map(plan => `
+        <div class="transaction-card">
+          <div class="card-header">
+            <h3 class="card-title">${plan.planName}</h3>
+            <span class="card-type">Plan</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">User:</span>
+            <span class="detail-value">${plan.userId}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Amount:</span>
+            <span class="detail-value">$${plan.amount.toFixed(2)}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Type:</span>
+            <span class="detail-value">${plan.planType}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Enrolled:</span>
+            <span class="detail-value">${new Date(plan.enrolledAt).toLocaleString()}</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-approve" onclick="approvePlan('${plan._id}')">Approve</button>
+            <button class="btn btn-reject" onclick="rejectPlan('${plan._id}')">Reject</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderWithdrawals() {
+      const container = document.getElementById('withdrawalsList');
+      const loading = document.getElementById('withdrawalsLoading');
+      const empty = document.getElementById('withdrawalsEmpty');
+
+      if (transactionData.withdrawals.length === 0) {
+        container.style.display = 'none';
+        loading.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+
+      container.style.display = 'grid';
+      loading.style.display = 'none';
+      empty.style.display = 'none';
+
+      container.innerHTML = transactionData.withdrawals.map(with_ => `
+        <div class="transaction-card">
+          <div class="card-header">
+            <h3 class="card-title">Withdrawal Request</h3>
+            <span class="card-type">Withdrawal</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">User:</span>
+            <span class="detail-value">${with_.userId}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Amount:</span>
+            <span class="detail-value">$${with_.amount.toFixed(2)}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Address:</span>
+            <span class="detail-value">${with_.withdrawalAddress.substring(0, 20)}...</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Network:</span>
+            <span class="detail-value">${with_.network}</span>
+          </div>
+          <div class="card-detail">
+            <span class="detail-label">Submitted:</span>
+            <span class="detail-value">${new Date(with_.submittedAt).toLocaleString()}</span>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-approve" onclick="approveWithdrawal('${with_._id}')">Approve</button>
+            <button class="btn btn-reject" onclick="rejectWithdrawal('${with_._id}')">Reject</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function approveDeposit(id) {
+      if (!confirm('Approve this deposit?')) return;
+      
+      try {
+        const response = await fetch(`/api/admin/deposits/${id}/approve`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          alert('Deposit approved!');
+          loadPendingTransactions();
+        } else {
+          alert('Error approving deposit');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error approving deposit');
+      }
+    }
+
+    async function rejectDeposit(id) {
+      const reason = prompt('Rejection reason:');
+      if (!reason) return;
+
+      try {
+        const response = await fetch(`/api/admin/deposits/${id}/reject`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason })
+        });
+
+        if (response.ok) {
+          alert('Deposit rejected!');
+          loadPendingTransactions();
+        } else {
+          alert('Error rejecting deposit');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error rejecting deposit');
+      }
+    }
+
+    async function approvePlan(id) {
+      if (!confirm('Approve this plan enrollment?')) return;
+
+      try {
+        const response = await fetch(`/api/admin/plans/${id}/approve`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          alert('Plan approved!');
+          loadPendingTransactions();
+        } else {
+          alert('Error approving plan');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error approving plan');
+      }
+    }
+
+    async function rejectPlan(id) {
+      if (!confirm('Reject this plan enrollment?')) return;
+
+      try {
+        const response = await fetch(`/api/admin/plans/${id}/reject`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          alert('Plan rejected!');
+          loadPendingTransactions();
+        } else {
+          alert('Error rejecting plan');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error rejecting plan');
+      }
+    }
+
+    async function approveWithdrawal(id) {
+      if (!confirm('Approve this withdrawal?')) return;
+
+      try {
+        const response = await fetch(`/api/admin/withdrawals/${id}/approve`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          alert('Withdrawal approved!');
+          loadPendingTransactions();
+        } else {
+          alert('Error approving withdrawal');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error approving withdrawal');
+      }
+    }
+
+    async function rejectWithdrawal(id) {
+      const reason = prompt('Rejection reason:');
+      if (!reason) return;
+
+      try {
+        const response = await fetch(`/api/admin/withdrawals/${id}/reject`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason })
+        });
+
+        if (response.ok) {
+          alert('Withdrawal rejected!');
+          loadPendingTransactions();
+        } else {
+          alert('Error rejecting withdrawal');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error rejecting withdrawal');
+      }
+    }
+
+    // Load on page load
+    window.addEventListener('DOMContentLoaded', loadPendingTransactions);
+  </script>
+  <script src="js/mobile-utils.js" defer></script>
+  <script src="js/pwa-register.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Rock - Dashboard</title>
+  <link rel="stylesheet" href="css/styles-new.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg, #0a0e27);
+      color: var(--text, #fff);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    
+    .dashboard-container {
+      max-width: 1200px; /* wider layout for laptop */
+      margin: 0 auto;
+      padding: 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .header-actions .btn {
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      background: rgba(21, 179, 122, 0.12);
+      color: var(--green, #15b37a);
+      border: 1px solid rgba(21, 179, 122, 0.25);
+      font-weight: 600;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .header-actions .btn:hover {
+      background: var(--green, #15b37a);
+      color: #000;
+      border-color: var(--green, #15b37a);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(21, 179, 122, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: -1px;
+    }
+
+    .logo .logo-icon {
+      color: var(--green, #15b37a);
+      font-size: 1.5rem;
+    }
+
+    .logo-text span.green {
+      color: var(--green, #15b37a);
+    }
+
+    .logo-text span.orange {
+      color: var(--orange, #ff9d3d);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-name {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--green, #15b37a);
+      color: black;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: #12a066;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--green, #15b37a);
+      border: 1px solid var(--green, #15b37a);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(21, 179, 122, 0.1);
+    }
+
+    .dashboard-content {
+      flex: 1;
+      display: block;
+      width: 100%;
+    }
+
+    /* Full-width stat cards grid - no sidebars, fills available space */
+    #statCards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2rem;
+      align-items: stretch;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Welcome section - full width, compact */
+    .welcome-section {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+      padding: 1.2rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0 auto 1.2rem auto;
+      width: 100%;
+      max-width: 100vw;
+      padding: 0.2rem 0.1rem;
+      display: none; /* hidden - moved to header */
+    }
+
+    /* Icon inside buttons */
+    .btn .icon {
+      display: inline-flex;
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+      vertical-align: middle;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* Screen-reader only helper */
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    /* Small sparkline in Performance card (canvas removed) */
+    .sparkline-canvas { width: 100%; height: 36px; display: block; }
+    /* Performance card refined styles */
+    .perf-inner { padding: 0.3rem 0.5rem; border-radius: 10px; }
+    .perf-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:0.4rem; align-items:stretch; }
+    .perf-stat { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:0.4rem; border-radius:8px; box-shadow: 0 6px 18px rgba(2,6,11,0.28); display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:50px; }
+    .stat-label { font-size:0.76rem; color: rgba(255,255,255,0.78); margin-bottom:4px; }
+    .stat-value { font-weight:800; font-size:0.98rem; line-height:1; }
+    .stat-sub { font-size:0.66rem; color: rgba(255,255,255,0.56); margin-top:3px; }
+    .perf-header { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:6px; }
+    .perf-title { font-size:0.98rem; font-weight:700; color: rgba(255,255,255,0.95); }
+    .perf-spark { width:120px; height:36px; }
+    @media (max-width: 660px) {
+      .perf-grid { grid-template-columns: 1fr; }
+      .perf-spark { width:100px; }
+    }
+    @media (max-width: 600px) {
+      .perf-row { flex-direction:column; gap:0.5rem; }
+      .perf-col-right { width:auto; text-align:left; border-left:none; padding-left:0; }
+    }
+
+    /* Balance card advanced controls */
+    .balance-card-header { display:flex; justify-content:space-between; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+    .balance-title { font-size:0.95rem; font-weight:600; color:rgba(255,255,255,0.95); }
+    .balance-value { font-weight:800; font-size:1.25rem; color:#15b37a; letter-spacing: -0.4px; }
+    .chart-controls { display:flex; gap:0.45rem; align-items:center; }
+    /* Range buttons removed for simplified hourly view */
+    
+    
+    
+    .export-btn { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.85); border: none; padding: 0.32rem 0.5rem; border-radius:6px; cursor:pointer; font-size:0.84rem; }
+    .export-btn:hover { filter:brightness(1.05); }
+    /* Ensure balance chart canvas fills its container and is touch-friendly */
+    #balanceChart { width: 100% !important; height: 100% !important; display: block; }
+
+    @media (max-width: 900px) {
+      /* slightly reduce balance chart height on mobile */
+      div[style*="position:relative;height:260px"] { height: 200px !important; }
+      .balance-value { font-size: 1rem; }
+    }
+    /* Animated number helper */
+    .stat-number { transition: color 300ms ease, transform 400ms ease; }
+
+    /* Responsive media queries */
+    @media (max-width: 1024px) {
+      .dashboard-container {
+        padding: 0.8rem;
+      }
+
+      .dashboard-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+      }
+
+      .header-actions {
+        gap: 0.4rem;
+      }
+
+      .header-actions .btn {
+        padding: 0.45rem 0.8rem;
+        font-size: 0.75rem;
+      }
+
+      #statCards {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: 0.6rem;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .header-left {
+        width: 100%;
+        gap: 1rem;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .user-name {
+        font-size: 0.9rem;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.3rem;
+        padding-bottom: 0.5rem;
+      }
+
+      .header-actions .btn {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+      }
+
+      .logo {
+        font-size: 1.2rem;
+      }
+
+      .welcome-section {
+        padding: 1rem;
+      }
+
+      #statCards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.9rem;
+        margin-bottom: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard-container {
+        padding: 0.5rem;
+      }
+
+      .dashboard-header {
+        margin-bottom: 1rem;
+        padding-bottom: 0.8rem;
+      }
+
+      .header-actions {
+        gap: 0.2rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .header-actions .btn {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.65rem;
+        border-radius: 4px;
+      }
+
+      .logo {
+        font-size: 1rem;
+      }
+
+      .welcome-section {
+        padding: 0.8rem;
+      }
+
+      #statCards {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+    }
+
+    /* Force all top-level stat cards to exactly the same height for consistent layout */
+    #statCards > * {
+      box-sizing: border-box;
+      height: 220px; /* exact fixed height for desktop */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* Smaller fixed height on narrow screens */
+    @media (max-width: 900px) {
+      #statCards > * { height: 200px; }
+    }
+
+    @media (max-width: 480px) {
+      #statCards > * { height: 160px; }
+    }
+
+    /* Flash animation when stats update */
+    @keyframes statFlash {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.12); transform: translateY(0); }
+      30% { box-shadow: 0 6px 22px rgba(255,255,255,0.08); transform: translateY(-3px); }
+      100% { box-shadow: 0 6px 18px rgba(255,255,255,0.04); transform: translateY(0); }
+    }
+    .stat-flash { animation: statFlash 900ms ease both; }
+
+    /* Verified badge entrance animation */
+    .verification-badge {
+      display: inline-block;
+      transform: translateY(-8px);
+      opacity: 0;
+      will-change: transform, opacity;
+      animation: slideInBadge 420ms cubic-bezier(.2,.9,.2,1) forwards;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
+
+    @keyframes slideInBadge {
+      from { transform: translateY(-12px); opacity: 0; }
+      60% { transform: translateY(4px); opacity: 1; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Delta pulse for numeric deltas */
+    @keyframes deltaPulse {
+      0% { background: rgba(255,255,255,0.02); transform: translateY(0); }
+      40% { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+      100% { background: rgba(255,255,255,0.02); transform: translateY(0); }
+    }
+    .delta-pulse { animation: deltaPulse 800ms ease both; border-radius:4px; padding:2px 6px; }
+
+    /* Make all action buttons smaller, uniform color and in one row */
+    .action-buttons { display:flex; flex-direction:row; flex-wrap:nowrap; gap:0.5rem; justify-content:center; align-items:center; }
+    .action-buttons .btn { padding:0.45rem 0.7rem; font-size:0.92rem; min-width:0; max-width:140px; border-radius:8px; flex:1 1 auto; }
+    /* Uniform color for all action buttons */
+    .action-buttons .btn { background: var(--green, #15b37a); color: #fff; border: none; }
+    .action-buttons .btn:hover { filter:brightness(0.95); transform: translateY(-1px); }
+    @media (max-width: 900px) {
+      .dashboard-container {
+        padding: 0.6rem;
+        max-width: 100vw;
+      }
+      .dashboard-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.5rem;
+      }
+      .welcome-section h1 {
+        font-size: 1.5rem;
+      }
+      .welcome-section p {
+        font-size: 0.95rem;
+      }
+      /* Keep action buttons in a single compact row on mobile; reduce padding and font-size so they fit */
+      .action-buttons { gap: 0.45rem; }
+      .action-buttons .btn { font-size: 0.86rem; padding: 0.38rem 0.6rem; max-width:120px; }
+      [style*="max-width:1100px"] {
+        max-width: 100vw !important;
+        padding: 1rem !important;
+      }
+      [style*="grid-template-columns:1fr 1fr 1fr"] {
+        grid-template-columns:1fr !important;
+        gap: 1rem !important;
+      }
+      h2#userFullName {
+        font-size: 1.2rem !important;
+      }
+      /* Collapse two-column grid to single column on smaller screens */
+      .content-grid {
+        display: block !important;
+      }
+      .sidebar { margin-top: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <div class="header-left">
+        <div class="logo">
+          <span class="logo-icon">◉</span>
+          <div class="logo-text">
+            <span class="green">Black</span><span class="orange">Rock</span>
+          </div>
+        </div>
+        <div class="user-name">Welcome, <span id="userNameDisplay">User</span></div>
+      </div>
+      <div class="header-actions">
+        <button class="btn" id="plansBtn" title="View Plans" aria-label="View Plans">
+          <span class="btn-text">Plans</span>
+        </button>
+        <button class="btn" id="depositsBtn" title="Deposit" aria-label="Make a Deposit">
+          <span class="btn-text">Deposit</span>
+        </button>
+        <button class="btn" id="withdrawBtn" title="Withdraw" aria-label="Withdraw Funds">
+          <span class="btn-text">Withdraw</span>
+        </button>
+        <button class="btn" id="transactionBtn" title="Transactions" aria-label="View Transactions">
+          <span class="btn-text">Transactions</span>
+        </button>
+        <button class="btn" id="affiliateBtn" title="Affiliate" aria-label="Affiliate">
+          <span class="btn-text">Affiliate</span>
+        </button>
+        <button class="btn" id="settingsBtn" title="Settings" aria-label="Open Settings">
+          <span class="btn-text">Settings</span>
+        </button>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <div class="welcome-section" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;position:relative;">
+        <div style="flex:1;min-width:0;position:relative;">
+          <div style="font-size:1rem;color:rgba(255,255,255,0.7);margin-bottom:0.5rem;">Welcome back</div>
+          <h2 id="userFullName" style="font-size:2rem;font-weight:700;margin:0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">User</h2>
+          <div id="verificationBadge" class="verification-badge" style="position:absolute;top: -2px;left:120px;z-index:6;">
+            <!-- Verified badge will be injected here -->
+          </div>
+        </div>
+        <div style="text-align:right;color:rgba(255,255,255,0.5);font-size:0.95rem;min-width:110px;position:relative;">
+          <div id="greetingTime" style="margin-bottom:0.5rem;">—</div>
+          <div id="currentDate" style="font-size:0.9rem;">—</div>
+        </div>
+      </div>
+      
+
+      <div id="statCards" style="display:grid;gap:1.2rem;align-items:stretch;width:100%;margin-bottom:1.5rem;">
+        <!-- Card 1: Your Balance -->
+        <div style="background:linear-gradient(135deg,rgba(21,179,122,0.12) 0%,rgba(21,179,122,0.03) 100%);padding:0.9rem;border-radius:12px;border:1px solid rgba(21,179,122,0.12);height:220px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 6px 18px rgba(21,179,122,0.06);">
+          <div class="balance-card-header">
+            <div style="min-width:0;display:flex;align-items:center;gap:0.75rem;">
+              <div class="balance-title">Your Balance</div>
+              <div id="balanceValue" class="balance-value">0$</div>
+            </div>
+            <div class="chart-controls">
+              <button id="exportBalanceChart" class="export-btn" title="Export Balance Chart" aria-label="Export Balance Chart">Export</button>
+            </div>
+          </div>
+          <div style="padding:0.2rem 0;width:100%;flex:1;display:flex;align-items:center;">
+            <div style="width:100%;height:100%;position:relative;">
+              <canvas id="balanceChart" aria-label="Balance history chart" role="img" style="width:100%;height:100%;display:block;"></canvas>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2: 30-Day Growth -->
+        <div style="background:linear-gradient(135deg,rgba(79,70,229,0.12) 0%,rgba(79,70,229,0.03) 100%);padding:0.9rem;border-radius:12px;border:1px solid rgba(79,70,229,0.12);height:220px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 6px 18px rgba(79,70,229,0.06);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+              <div style="font-size:0.95rem;font-weight:600;color:rgba(255,255,255,0.95);">30-Day Growth</div>
+              <div id="growthValue" style="font-weight:700;font-size:1.2rem;color:#4f46e5">0</div>
+          </div>
+            <div style="padding:0.4rem 0;width:100%;min-height:56px;display:flex;align-items:center;">
+              <div style="width:100%;height:120px;position:relative;">
+                <canvas id="growthChart" aria-label="30 day growth chart" role="img" style="width:100%;height:100%;display:block;"></canvas>
+              </div>
+            </div>
+        </div>
+        <!-- Card 3: Performance (compact/professional layout) -->
+        <div id="performanceCard" style="background:linear-gradient(135deg,rgba(21,179,122,0.12) 0%,rgba(21,179,122,0.03) 100%);padding:0.4rem 0.9rem 0.9rem 0.9rem;border-radius:12px;border:1px solid rgba(21,179,122,0.12);height:220px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 6px 18px rgba(21,179,122,0.06);box-sizing:border-box;overflow:hidden;">
+          <div class="perf-inner">
+            <div class="perf-header">
+              <div class="perf-title">Analytics</div>
+            </div>
+
+            <div class="perf-grid">
+              <div class="perf-stat">
+                <div class="stat-label">Profit Share</div>
+                <div id="earningsValue" class="stat-value" style="color:#ff9d3d;">0</div>
+                <div id="earningsDelta" class="stat-sub">+0</div>
+              </div>
+
+              <div class="perf-stat">
+                <div class="stat-label">ROI</div>
+                <div id="roiValue" class="stat-value" style="color:#15b37a;">0%</div>
+                <div id="roiDelta" class="stat-sub">+0%</div>
+              </div>
+
+              <div class="perf-stat">
+                <div class="stat-label">Total Deposited</div>
+                <div id="depositsValue" class="stat-value">0</div>
+                <div id="depositsDelta" class="stat-sub">+0</div>
+              </div>
+
+              <div class="perf-stat">
+                <div class="stat-label">Total Withdraw</div>
+                <div id="withdrawalsValue" class="stat-value" style="color:#ffd1b3;">0</div>
+                <div id="withdrawalsDelta" class="stat-sub">+0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth-shared.js"></script>
+  <script src="js/mobile-utils.js" defer></script>
+  <!-- Load vendor scripts via same-origin proxy to satisfy CSP 'self' -->
+  <script src="/vendor/qrcode.min.js"></script>
+  <script src="js/deposit-config.js"></script>
+  <!-- Chart.js for balance visualization (proxied to stay within CSP 'self') -->
+  <script src="/vendor/chart.umd.min.js"></script>
+  <script src="/vendor/chartjs-plugin-datalabels.min.js"></script>
+  <script src="js/dashboard-simple.js"></script>
+  <script src="js/theme-toggle.js"></script>
+  <script src="js/dashboard-charts.js"></script>
+  <script src="js/dashboard-inline.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const btn = document.getElementById('affiliateBtn');
+      if (btn) btn.addEventListener('click', function () { window.location.href = '/affiliate.html'; });
+    });
+  </script>
+  <script src="js/pwa-register.js" defer></script>
+</body>
+</html>

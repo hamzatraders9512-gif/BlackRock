@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Affiliate — Black Rock</title>
+  <link rel="stylesheet" href="css/styles-new.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <style>
+    :root{ --bg:#0a0e12; --card:#0f1318; --muted:rgba(255,255,255,0.6); --accent:#f49b00; --accent-2:#15b37a; }
+    html,body{height:100%;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:#fff}
+    .wrap{max-width:1100px;margin:0 auto;padding:16px}
+    .back{display:inline-block;margin-bottom:12px;color:var(--accent-2);text-decoration:none;font-weight:700}
+    .grid-top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+    .hero{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.03);border-radius:12px;padding:14px}
+    .title{font-size:1.1rem;font-weight:800}
+    .subtitle{color:var(--muted);font-size:0.9rem;margin-top:6px}
+    .kpi-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+    .kpi{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:10px;border-radius:10px;min-width:110px;flex:1;border:1px solid rgba(255,255,255,0.03)}
+    .kpi h3{margin:0;font-size:1.05rem}
+    .kpi p{margin:4px 0 0;color:var(--muted);font-size:0.85rem}
+
+    /* Referral link area */
+    .ref-area{margin-top:12px;display:flex;gap:8px;align-items:center}
+    .ref-link{background:rgba(255,255,255,0.02);padding:10px;border-radius:10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .actions{display:flex;gap:8px}
+    .btn{background:var(--accent);border:none;padding:8px 12px;border-radius:8px;color:#000;font-weight:800;cursor:pointer}
+    .btn--alt{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:700}
+
+    /* tiers */
+    .tiers{margin-top:14px;border-radius:10px;padding:12px;background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.03)}
+    .tier-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .tier{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);text-align:center}
+    .tier .label{font-weight:800}
+    .tier .sub{color:var(--muted);font-size:0.85rem;margin-top:6px}
+    .progress-wrap{margin-top:12px}
+    .progress{height:6px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent-2),var(--accent));width:0%}
+    .progress-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:0.85rem;margin-top:6px}
+
+    /* Tabs */
+    .tabs{display:flex;gap:8px;margin-top:14px}
+    .tab{padding:8px 10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);font-weight:700}
+    .tab.active{background:rgba(255,255,255,0.02);color:#fff}
+
+    /* referrals list */
+    .list{margin-top:12px}
+    .tx{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);margin-bottom:8px}
+
+    .muted{color:var(--muted)}
+
+    /* Responsive/mobile */
+    @media (max-width:720px){
+      .grid-top{grid-template-columns:1fr}
+      .tier-row{grid-template-columns:repeat(2,1fr)}
+      .kpi{min-width:140px}
+      .ref-area{flex-direction:column;align-items:stretch}
+      .actions{justify-content:flex-end}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/dashboard.html">← Back to Dashboard</a>
+
+    <div class="grid-top">
+      <div class="hero">
+        <div class="title">Affiliate Dashboard</div>
+        <div class="subtitle">Share your referral link to earn commissions. Track clicks, signups and conversions here.</div>
+
+        <div class="kpi-row">
+          <div class="kpi"><h3 id="myBalance">—</h3><p>Pending Payout</p></div>
+          <div class="kpi"><h3 id="refCount">—</h3><p>Total Referrals</p></div>
+          <div class="kpi"><h3 id="conversion">0.0%</h3><p>Conversion Rate</p></div>
+          <div class="kpi"><h3 id="clicks">0</h3><p>Clicks</p></div>
+        </div>
+
+        <div class="ref-area">
+          <div class="ref-link" id="referralLink">—</div>
+          <div class="actions">
+            <button class="btn" id="copyRefBtn">Copy Link</button>
+            <button class="btn btn--alt" id="shareBtn">Share</button>
+          </div>
+        </div>
+        <div id="copyMsg" class="muted" style="margin-top:8px;display:none"></div>
+      </div>
+
+      <div style="min-width:220px;align-self:start">
+        <div class="hero" style="padding:12px">
+          <div id="stageLabel" style="font-weight:800">Stage: —</div>
+          <div id="rewardLabel" class="muted" style="margin-top:6px">Reward per referral: —</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tiers">
+      <div style="font-weight:800;margin-bottom:8px">Affiliate Tiers</div>
+      <div class="tier-row">
+        <div class="tier"><div class="label">Bronze</div><div style="color:#f7b64a;font-weight:800">10%</div><div class="sub">0+ referrals</div></div>
+        <div class="tier"><div class="label">Silver</div><div style="color:#cfd3d9;font-weight:800">12%</div><div class="sub">25+ referrals</div></div>
+        <div class="tier"><div class="label">Gold</div><div style="color:#ffd166;font-weight:800">15%</div><div class="sub">50+ referrals</div></div>
+        <div class="tier"><div class="label">Platinum</div><div style="color:#72d4ff;font-weight:800">18%</div><div class="sub">100+ referrals</div></div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+        <div class="progress-meta"><span id="progressText">0 / 100 referrals</span><span class="muted">Keep growing to unlock higher commission rates</span></div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="ref">Referrals</button>
+      <button class="tab" data-tab="comm">Commissions</button>
+      <button class="tab" data-tab="analytics">Analytics</button>
+      <button class="tab" data-tab="marketing">Marketing</button>
+    </div>
+
+    <div class="list" id="tabContent">
+      <h4 style="margin:10px 0">Your Referrals</h4>
+      <div id="refTxList"></div>
+    </div>
+
+  </div>
+
+  <script src="js/affiliate.js"></script>
+  <script>
+    // small enhancements for mobile: share button and progress animation
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const shareBtn = document.getElementById('shareBtn');
+      shareBtn.addEventListener('click', async ()=>{
+        const url = document.getElementById('referralLink').textContent;
+        if (navigator.share) {
+          try { await navigator.share({ title: 'Join Black Rock', text: 'Earn rewards with my referral link', url }); } catch(e){}
+        } else {
+          try { await navigator.clipboard.writeText(url); const msg = document.getElementById('copyMsg'); msg.style.display='block'; msg.textContent='Link copied for sharing'; setTimeout(()=>msg.style.display='none',2000);}catch(e){}
+        }
+      });
+
+      // simple tabs
+      document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', (ev)=>{
+        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+        ev.currentTarget.classList.add('active');
+        const tab = ev.currentTarget.dataset.tab;
+        // for now we only show referrals content; other tabs can be implemented later
+        document.getElementById('tabContent').querySelector('h4').textContent = tab==='ref' ? 'Your Referrals' : ev.currentTarget.textContent;
+      }));
+
+      // animate progress bar based on referrals (affiliate.js will set progressText and refCount)
+      const observer = new MutationObserver(()=>{
+        const refText = document.getElementById('refCount').textContent || '';
+        const m = refText.match(/(\d+)/);
+        const n = m ? parseInt(m[1],10) : 0;
+        const pct = Math.min(100, Math.round((n/100)*100));
+        const bar = document.getElementById('progressBar');
+        bar.style.width = pct + '%';
+        document.getElementById('progressText').textContent = `${n} / 100 referrals`;
+      });
+      observer.observe(document.getElementById('refCount'),{childList:true,characterData:true,subtree:true});
+    });
+  </script>
+  <script src="js/pwa-register.js" defer></script>
+</body>
+</html>

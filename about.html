@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About Our Investment Platform</title>
+  <link rel="stylesheet" href="css/about-investment.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <style>/* minimal fallback font */
+    html,body{height:100%;margin:0}
+  </style>
+</head>
+<body class="about-body">
+  <main class="about-wrap fade-in">
+    <div class="container">
+      <header class="hero">
+        <h1 class="title">About Our Investment Platform</h1>
+        <p class="subtitle">We provide a professionally-managed investment solution that allows users to allocate capital into pooled strategies executed by an expert trading desk.
+          Investors receive a proportional daily share of realized trading profits. Our platform emphasizes disciplined risk management, transparency, and reliable operational controls.</p>
+      </header>
+
+      <section class="grid-overview">
+        <aside class="overview-card">
+          <h3>How it Works</h3>
+          <ol>
+            <li>1. You deposit funds</li>
+            <li>2. Capital is pooled and managed</li>
+            <li>3. Professional traders execute disciplined strategies</li>
+            <li>4. Profits are distributed daily (4%–8%)*</li>
+          </ol>
+          <p class="muted">*Daily ranges vary by market conditions and are not guaranteed.</p>
+        </aside>
+
+        <section class="cards-grid">
+          <article class="glass-card">
+            <div class="card-head"><div class="emoji">🚀</div><h4>Purpose of Investment</h4></div>
+            <p class="card-body">Investors deposit capital into secure accounts that are pooled and managed on their behalf. Our objective is to deliver accessible, institutional-grade exposure
+              to disciplined trading strategies so investors can participate in systematic profit generation without direct market interaction.</p>
+          </article>
+
+          <article class="glass-card">
+            <div class="card-head"><div class="emoji">📊</div><h4>Investment Model</h4></div>
+            <p class="card-body">Our model follows a clear, auditable flow: investors deposit funds, capital is allocated into pooled strategies, professional traders execute trades,
+              and realized profits are measured and distributed to investors daily. Typical profit-sharing ranges are approximately 4%–8% per day, depending on market conditions
+              and the investor's balance; actual returns vary and cannot be guaranteed.</p>
+          </article>
+
+          <article class="glass-card">
+            <div class="card-head"><div class="emoji">💼</div><h4>Professional Trading Strategy</h4></div>
+            <p class="card-body">All trading activity is conducted by our experienced trading desk. For consistency and liquidity, trading is strictly limited to Gold (XAU/USD) and Bitcoin (BTC).
+              This focused asset set enables the team to apply specialized strategies, maintain tight risk controls, and pursue repeatable profit opportunities while reducing cross-market complexity.</p>
+          </article>
+
+          <article class="glass-card">
+            <div class="card-head"><div class="emoji">🛡️</div><h4>Risk Management & Capital Protection</h4></div>
+            <p class="card-body">Risk control is central to our process. The desk applies systematic stop-loss discipline, rigorous position-sizing, dynamic exposure limits, and diversified execution windows.
+              Capital protection measures and continuous monitoring aim to limit downside drawdowns while allowing for measured, sustainable growth.</p>
+          </article>
+
+          <article class="glass-card">
+            <div class="card-head"><div class="emoji">💸</div><h4>Daily Profit Distribution</h4></div>
+            <p class="card-body">Realized profits are calculated on a daily basis, credited to investor accounts, and made visible in the dashboard in near real-time.
+              Distribution is proportional to each investor's share of the pooled capital for the distribution period. Payouts are documented and auditable within your account history.</p>
+          </article>
+
+          <article class="glass-card">
+            <div class="card-head"><div class="emoji">⚖️</div><h4>Transparency & User Control</h4></div>
+            <p class="card-body">Investors retain full visibility into their deposits, daily profit credits, transaction history, and performance metrics. Our reporting is designed for clarity and auditability,
+              enabling users to reconcile distributions and understand performance drivers. Controls include deposit/withdrawal history, balance snapshots, and exportable statements.</p>
+          </article>
+        </section>
+      </section>
+
+      <section class="legal">
+        <h5>Legal Disclaimer & Risk Notice ⚠️</h5>
+        <p>Trading involves risk. Profits are not guaranteed and past performance does not guarantee future results. Investors assume all risk. This platform provides information, not financial advice. Consult a licensed professional for advice tailored to your situation.</p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Fade-up on scroll for cards using IntersectionObserver
+    (function(){
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target) }
+        })
+      },{threshold:0.12})
+      document.querySelectorAll('.glass-card').forEach(el=>{ el.classList.add('pre-animate'); obs.observe(el) })
+      // initial page fade-in handled by CSS class .fade-in
+    })()
+  </script>
+  <script src="js/mobile-utils.js" defer></script>
+  <script src="js/pwa-register.js" defer></script>
+</body>
+</html>

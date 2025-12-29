@@ -1,0 +1,39 @@
+/* Dark premium background + neon accents for standalone about page */
+:root{--bg:#030518;--text:#cfeff5;--accent:#00ffe1}
+body.about-body{background:linear-gradient(180deg,#020617 0%,#050919 60%);color:var(--text);font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;margin:0}
+.about-wrap{min-height:100vh;padding:48px 20px}
+.container{max-width:1100px;margin:0 auto}
+.hero{margin-bottom:24px}
+.title{font-size:32px;margin:0 0 8px;color:#e6ffff}
+.subtitle{color:#9fdfe6;margin:0 0 18px}
+
+.grid-overview{display:grid;grid-template-columns:1fr;gap:18px}
+@media(min-width:880px){.grid-overview{grid-template-columns:360px 1fr}}
+
+.overview-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:20px;box-shadow:0 6px 30px rgba(2,6,23,0.6);border:1px solid rgba(32,249,240,0.06);backdrop-filter:blur(8px) saturate(120%)}
+.overview-card h3{color:#dffcff;margin:0 0 8px}
+.overview-card ol{margin:0 0 8px 18px;color:#bfeff4}
+.muted{font-size:0.85rem;color:#93dbe2;opacity:0.95}
+
+.cards-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:720px){.cards-grid{grid-template-columns:repeat(2,1fr)}}
+
+.glass-card{background:linear-gradient(180deg,rgba(10,20,24,0.5),rgba(8,12,16,0.45));border-radius:12px;padding:16px;box-shadow:0 8px 40px rgba(3,14,27,0.6);border:1px solid rgba(20,255,244,0.06);backdrop-filter:blur(6px);transition:transform .22s ease,box-shadow .22s ease;opacity:0;transform:translateY(18px)}
+.glass-card:hover{transform:translateY(-6px);box-shadow:0 18px 60px rgba(3,14,27,0.75)}
+.card-head{display:flex;gap:10px;align-items:center}
+.emoji{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:linear-gradient(135deg,rgba(16,255,240,0.08),rgba(16,255,240,0.02));color:var(--accent);font-size:1.2rem}
+.card-head h4{margin:0;color:#e9ffff}
+.card-body{color:#bfeff4;margin-top:8px}
+
+.legal{margin-top:20px;padding:14px;color:#99dbe1;font-size:0.95rem}
+
+/* Fade-in page */
+.fade-in{animation:pageFade .6s ease both}
+@keyframes pageFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Card scroll-in */
+.pre-animate{opacity:0;transform:translateY(18px)}
+.pre-animate.in-view{opacity:1;transform:none;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.9,.2,1)}
+
+/* small neon divider */
+.about-wrap::after{content:'';display:block;height:2px;width:100%;margin-top:28px;background:linear-gradient(90deg,transparent,rgba(0,255,225,0.06),transparent)}

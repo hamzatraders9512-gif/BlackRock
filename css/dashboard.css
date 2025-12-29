@@ -1,0 +1,65 @@
+/* Modern Dashboard Styles */
+
+.dashboard-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0) 60%);
+}
+
+/* Top banner */
+.top-banner {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+  padding:1rem 1.25rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.top-banner .banner-left { display:flex; align-items:center; gap:1rem }
+.banner-welcome h2 { margin:0; color:#fff; font-size:1.2rem }
+.banner-welcome .sub { margin:0; color:var(--dim); font-size:0.9rem }
+.banner-right { display:flex; align-items:center; gap:0.5rem }
+.search-input { padding:0.5rem 0.75rem; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:var(--input-bg); color:var(--text) }
+
+/* Shell layout */
+.app-shell { display:flex; gap:1rem; margin-top:0.6rem }
+.side-nav { width:220px; background:rgba(0,0,0,0.45); border-radius:10px; padding:1rem; color:var(--dim); border:1px solid rgba(255,255,255,0.03) }
+.nav-brand { color:var(--green); font-weight:700; margin-bottom:1rem }
+.nav-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem }
+.nav-list li { padding:0.6rem; border-radius:6px; cursor:pointer; color:var(--text) }
+.nav-list li.active { background:rgba(255,255,255,0.02); color:#fff }
+
+.content-area { flex:1; display:flex; flex-direction:column; gap:1rem }
+.grid-top { display:grid; grid-template-columns: repeat(3, 1fr); gap:0.75rem }
+.stat-card { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04); border-radius:10px; padding:1rem }
+.stat-title { color:var(--dim); font-size:0.85rem }
+.stat-value { font-weight:800; font-size:1.5rem; margin-top:6px }
+.stat-sub { color:var(--green); font-size:0.85rem; margin-top:6px }
+
+.grid-bottom { display:grid; grid-template-columns: 360px 1fr; gap:0.75rem }
+.card { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04); border-radius:12px; padding:1rem }
+.left-panel .panel-title, .right-panel .panel-title { color:var(--dim); font-weight:700; margin-bottom:8px }
+.panel-value { font-weight:700; font-size:1.3rem; margin-bottom:8px }
+.breakdown { color:var(--dim); display:flex; flex-direction:column; gap:6px }
+.breakdown .meta { float:right; color:#fff }
+
+/* Make chart smaller to match request */
+#growthChart { width:100% !important; height:120px !important }
+
+/* Responsive adjustments */
+@media screen and (max-width: 1000px) {
+  .grid-top { grid-template-columns: 1fr; }
+  .grid-bottom { grid-template-columns: 1fr }
+  .side-nav { display:none }
+}
+
+@media screen and (max-width: 480px) {
+  body { font-size: 14px }
+  .stat-value { font-size:1.1rem }
+  .nav-brand { display:none }
+}

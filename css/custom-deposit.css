@@ -1,0 +1,947 @@
+/* Custom Deposit Page - Android-Friendly Styling */
+
+:root {
+  --primary: #00d084;
+  --primary-dark: #00a366;
+  --secondary: #ff6b35;
+  --success: #00d084;
+  --warning: #ffa500;
+  --error: #ff3838;
+  --bg: #1a1a2e;
+  --bg-light: #16213e;
+  --text: #ffffff;
+  --text-dim: #b0b0b0;
+  --border: #2a2a4e;
+  --green: #00d084;
+  --orange: #ff6b35;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  /* ensure padding/border don't create overflow */
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+body.custom-deposit-body {
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.custom-deposit-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+
+/* Header Styling */
+.custom-deposit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: rgba(22, 33, 62, 0.95);
+  border-bottom: 1px solid rgba(0, 208, 132, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 1rem;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+.back-button:active {
+  color: var(--green);
+}
+
+.header-title {
+  flex: 1;
+  text-align: center;
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.header-spacer {
+  width: 2.5rem;
+  flex-shrink: 0;
+}
+
+/* Main Content */
+.custom-deposit-content {
+  flex: 1;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Center content and constrain width to match Plans page */
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.deposit-step {
+  margin-bottom: 2rem;
+  animation: slideIn 0.3s ease-out;
+  /* make each step visually centered and constrained */
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: linear-gradient(135deg, var(--green) 0%, var(--primary-dark) 100%);
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  color: #1a1a2e;
+}
+
+.step-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Amount Input Section */
+.amount-input-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.amount-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amount-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  /* allow children to shrink inside constrained containers */
+  min-width: 0;
+}
+
+.amount-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+  border-radius: 0.75rem;
+  /* make room on the left for the currency label */
+  padding: 0.6rem 0.9rem 0.6rem 2.4rem; /* top right bottom left */
+  color: var(--text);
+  font-size: 1.15rem; /* slightly smaller so values fit */
+  font-weight: 600;
+  text-align: right;
+  outline: none;
+  transition: all 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.amount-input:focus {
+  border-color: var(--green);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 208, 132, 0.1);
+}
+
+.amount-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Remove spinner for number input on Chrome, Safari, Edge, Opera */
+.amount-input::-webkit-outer-spin-button,
+.amount-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.amount-input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.amount-currency {
+  position: absolute;
+  left: 1rem; /* moved currency to the left side inside the input */
+  right: auto;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--green);
+  pointer-events: none;
+}
+
+.amount-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  padding: 0.75rem;
+  background: rgba(255, 165, 0, 0.1);
+  border-left: 2px solid var(--warning);
+  border-radius: 0.5rem;
+}
+
+.amount-info svg {
+  flex-shrink: 0;
+  color: var(--warning);
+}
+
+/* Address Display Section */
+.address-display-section {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.network-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 208, 132, 0.15);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  width: fit-content;
+  color: var(--green);
+}
+
+.network-icon {
+  font-size: 1rem;
+}
+
+.amount-display-card {
+  background: rgba(0, 208, 132, 0.1);
+  border-left: 3px solid var(--green);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.amount-display-label {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amount-display-value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.address-card-custom {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.address-card-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.address-text {
+  display: block;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+  color: var(--green);
+}
+
+.btn-copy-custom {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, rgba(0, 208, 132, 0.2) 0%, rgba(0, 208, 132, 0.1) 100%);
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.btn-copy-custom:active {
+  background: rgba(0, 208, 132, 0.3);
+  transform: scale(0.98);
+}
+
+/* QR Code Section */
+.qr-code-section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.qr-label {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.qr-code-placeholder {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px dashed rgba(0, 208, 132, 0.3);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  margin-bottom: 1rem;
+}
+
+.qr-code-placeholder canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+.qr-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* Warning Box */
+.warning-box {
+  display: flex;
+  gap: 1rem;
+  background: rgba(255, 165, 0, 0.1);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  border-left: 3px solid var(--warning);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.warning-box svg {
+  flex-shrink: 0;
+  color: var(--warning);
+  margin-top: 0.25rem;
+}
+
+.warning-text {
+  flex: 1;
+}
+
+.warning-title {
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.warning-message {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* Upload Section */
+.proof-upload-section {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.upload-area-custom {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.upload-label-custom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(0, 208, 132, 0.4);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.upload-label-custom:active {
+  background: rgba(0, 208, 132, 0.15);
+  border-color: var(--green);
+}
+
+.upload-label-custom svg {
+  color: var(--green);
+}
+
+.upload-text {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.upload-subtext {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* File Preview */
+.file-preview-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 208, 132, 0.1);
+  background: rgba(0, 208, 132, 0.05);
+}
+
+.preview-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-remove-file {
+  background: rgba(255, 56, 56, 0.15);
+  border: 1px solid rgba(255, 56, 56, 0.3);
+  color: var(--error);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn-remove-file:active {
+  background: rgba(255, 56, 56, 0.25);
+}
+
+.preview-content {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.preview-content img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 0.5rem;
+  object-fit: contain;
+}
+
+.preview-content .pdf-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--orange);
+}
+
+.preview-content .pdf-icon svg {
+  width: 60px;
+  height: 60px;
+}
+
+/* Upload Status */
+.upload-status {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.upload-status.loading {
+  background: rgba(0, 208, 132, 0.1);
+  border: 1px solid rgba(0, 208, 132, 0.3);
+}
+
+.upload-status.loading .status-message {
+  color: var(--green);
+  font-weight: 500;
+}
+
+.upload-status.success {
+  background: rgba(0, 208, 132, 0.15);
+  border: 1px solid rgba(0, 208, 132, 0.4);
+}
+
+.upload-status.success .status-message {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.upload-status.error {
+  background: rgba(255, 56, 56, 0.1);
+  border: 1px solid rgba(255, 56, 56, 0.3);
+}
+
+.upload-status.error .status-message {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.status-message {
+  margin: 0;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* File Info */
+.file-info {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--green);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.file-name,
+.file-size {
+  margin: 0.25rem 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.file-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Success Container */
+.success-container {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: rgba(0, 208, 132, 0.15);
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  color: var(--green);
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.success-icon svg {
+  width: 48px;
+  height: 48px;
+  stroke-width: 2;
+}
+
+.success-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.success-message {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.success-details {
+  background: rgba(0, 208, 132, 0.1);
+  border: 1px solid rgba(0, 208, 132, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 208, 132, 0.1);
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Buttons */
+.btn-proceed {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--green) 0%, var(--primary-dark) 100%);
+  border: none;
+  border-radius: 0.75rem;
+  color: #1a1a2e;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(0, 208, 132, 0.3);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.btn-proceed:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 8px rgba(0, 208, 132, 0.2);
+}
+
+.btn-proceed:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-proceed:disabled:active {
+  transform: none;
+}
+
+/* Footer */
+.custom-deposit-footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid rgba(0, 208, 132, 0.1);
+  background: rgba(22, 33, 62, 0.95);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.footer-text {
+  margin: 0;
+}
+
+.footer-link {
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.footer-link:active {
+  color: var(--primary-dark);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.loading-spinner {
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 208, 132, 0.2);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+#loadingText {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+/* Toast Container */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: slideUp 0.3s ease-out;
+  pointer-events: auto;
+  max-width: 100%;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast.success {
+  background: rgba(0, 208, 132, 0.2);
+  border: 1px solid rgba(0, 208, 132, 0.5);
+  color: var(--success);
+}
+
+.toast.error {
+  background: rgba(255, 56, 56, 0.2);
+  border: 1px solid rgba(255, 56, 56, 0.5);
+  color: var(--error);
+}
+
+.toast.info {
+  background: rgba(100, 150, 255, 0.2);
+  border: 1px solid rgba(100, 150, 255, 0.5);
+  color: #6496ff;
+}
+
+/* Responsive Design for Tablets */
+@media (min-width: 600px) {
+  .custom-deposit-content {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .deposit-step {
+    margin-bottom: 2.5rem;
+  }
+
+  .amount-input {
+    font-size: 1.25rem; /* reduce large font on wider screens to prevent overflow */
+  }
+
+  .btn-proceed {
+    padding: 1.25rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+  .custom-deposit-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .header-title h1 {
+    font-size: 1rem;
+  }
+
+  .custom-deposit-content {
+    padding: 1rem;
+  }
+
+  .deposit-step {
+    margin-bottom: 1rem;
+  }
+
+  .amount-input-wrapper,
+  .address-display-section,
+  .proof-upload-section {
+    padding: 1rem;
+  }
+
+  .qr-code-placeholder {
+    min-height: 150px;
+  }
+}
+
+/* Safe Area for notched devices */
+@supports (padding: max(0px)) {
+  .custom-deposit-header {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .custom-deposit-content {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .custom-deposit-footer {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+}

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction History — Black Rock</title>
+  <link rel="stylesheet" href="css/styles-new.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/plans.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg, #0a0e27);
+      color: var(--text, #fff);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+
+    .transactions-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem;
+      background: var(--bg);
+      background: radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0) 60%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Header styled like plans */
+    .transactions-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      width: 100%;
+    }
+    .transactions-header .back-btn {
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      background: rgba(21, 179, 122, 0.1);
+      border: 1px solid rgba(21, 179, 122, 0.2);
+      color: var(--green, #15b37a);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      user-select: none;
+    }
+    .transactions-header .back-btn:hover {
+      background: rgba(21, 179, 122, 0.15);
+      transform: translateX(-2px);
+    }
+    .transactions-title {
+      font-size: 2.2rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .transactions-subtitle {
+      font-size: 1.05rem;
+      color: var(--dim);
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Filter tabs with modern design */
+    .filter-tabs {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.8rem;
+      overflow-x: auto;
+      padding-bottom: 0.3rem;
+      scroll-behavior: smooth;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .filter-tabs::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .filter-tabs::-webkit-scrollbar-thumb {
+      background: rgba(21, 179, 122, 0.3);
+      border-radius: 10px;
+    }
+
+    .filter-tab {
+      padding: 0.65rem 1.3rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.02);
+      color: rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .filter-tab:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(21, 179, 122, 0.3);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .filter-tab.active {
+      background: linear-gradient(135deg, #15b37a 0%, #0f8a5a 100%);
+      color: #fff;
+      border-color: #15b37a;
+      box-shadow: 0 4px 12px rgba(21, 179, 122, 0.25);
+    }
+
+    /* Transactions grid like plans */
+    .transactions-grid {
+      display: flex;
+      gap: 1.25rem;
+      max-width: 1100px;
+      width: 100%;
+      margin-bottom: 2.5rem;
+      position: relative;
+      z-index: 1;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .transaction-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      width: 340px;
+      max-width: 340px;
+      padding: 1.1rem 1rem 1.2rem 1rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.23, 1, 0.320, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 6px 22px 0 rgba(0,0,0,0.18);
+      min-height: 180px;
+      font-size: 0.97rem;
+    }
+    .transaction-card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 16px 48px 0 rgba(21, 179, 122, 0.12);
+    }
+    .transaction-card .tx-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 0.7rem;
+      background: linear-gradient(135deg, rgba(21,179,122,0.10), rgba(21,179,122,0.03));
+      box-shadow: 0 2px 8px rgba(21,179,122,0.08);
+      align-self: flex-start;
+    }
+    .transaction-card .tx-type {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.2rem;
+      letter-spacing: 0.2px;
+    }
+    .transaction-card .tx-amount {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 0.2rem;
+    }
+    .transaction-card .tx-status {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .tx-status.status-pending { background: rgba(255,165,0,0.12); color: #ffad33; }
+    .tx-status.status-approved { background: rgba(21,179,122,0.12); color: var(--green,#15b37a); }
+    .tx-status.status-rejected { background: rgba(255,107,107,0.12); color: #ff6b6b; }
+    .transaction-card .tx-date {
+      font-size: 0.97rem;
+      color: var(--dim);
+      margin-bottom: 0.2rem;
+    }
+    .transaction-card .tx-id {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 0.1rem;
+      word-break: break-all;
+    }
+    .transaction-card .tx-desc {
+      font-size: 0.97rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.2rem;
+    }
+
+    .tx-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .tx-left {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex: 1;
+    }
+
+    .transaction-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .transaction-icon.deposit {
+      background: linear-gradient(135deg, rgba(21,179,122,0.18), rgba(21,179,122,0.06));
+    }
+
+    .transaction-icon.withdrawal {
+      background: linear-gradient(135deg, rgba(255,107,107,0.18), rgba(255,107,107,0.06));
+    }
+
+    .transaction-icon.plan {
+      background: linear-gradient(135deg, rgba(255,165,0,0.18), rgba(255,165,0,0.06));
+    }
+
+    .tx-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .tx-title {
+      font-weight: 700;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .tx-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .tx-right {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      justify-content: flex-end;
+    }
+
+    .tx-amount {
+      font-weight: 800;
+      font-size: 16px;
+      min-width: 90px;
+      text-align: right;
+    }
+
+    .amount-positive {
+      color: var(--green,#15b37a);
+    }
+
+    .amount-negative {
+      color: #ff6b6b;
+    }
+
+    .status-pill {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      background: rgba(255,165,0,0.12);
+      color: #ffad33;
+    }
+
+    .status-approved {
+      background: rgba(21,179,122,0.12);
+      color: var(--green,#15b37a);
+    }
+
+    .status-rejected {
+      background: rgba(255,107,107,0.12);
+      color: #ff6b6b;
+    }
+
+    /* Update highlight animation for status changes */
+    @keyframes txHighlight {
+      0% { box-shadow: 0 0 0 0 rgba(21,179,122,0.0); transform: translateY(0) scale(1); }
+      30% { box-shadow: 0 8px 20px rgba(21,179,122,0.15); transform: translateY(-2px) scale(1.01); }
+      100% { box-shadow: 0 4px 12px rgba(21,179,122,0.08); transform: translateY(0) scale(1); }
+    }
+    .tx-updated { animation: txHighlight 1000ms ease-in-out both; }
+
+  /* no status buttons - simplified UI */
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    /* Loading state */
+    .loading {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(21, 179, 122, 0.2);
+      border-top-color: #15b37a;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive design */
+    @media (max-width: 600px) {
+      .transactions-container {
+        padding: 1rem 0.8rem;
+      }
+
+      .transactions-header {
+        margin-bottom: 1.5rem;
+      }
+
+      .transactions-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .transaction-item {
+        padding: 1rem;
+      }
+
+      .transaction-left {
+        gap: 0.8rem;
+      }
+
+      .transaction-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+      }
+
+      .filter-tab {
+        padding: 0.55rem 1.1rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="transactions-container">
+    <div class="transactions-header">
+      <a class="back-btn" href="/dashboard.html" style="text-decoration:none;">←</a>
+      <h1 class="transactions-title">Transaction History</h1>
+      <p class="transactions-subtitle">All your deposits, withdrawals, and plan enrollments in one place</p>
+      <div id="filterTabs" class="filter-tabs">
+        <button class="filter-tab" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="pending">Pending</button>
+        <button class="filter-tab" data-filter="approved">Approved</button>
+        <button class="filter-tab" data-filter="rejected">Rejected</button>
+        <button class="filter-tab" data-filter="deposit">Deposits</button>
+        <button class="filter-tab" data-filter="withdrawal">Withdrawals</button>
+        <button class="filter-tab" data-filter="plan">Plans</button>
+        <button class="filter-tab" data-filter="earnings">Earnings</button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p>Loading History...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state" style="display: block;">
+      <div class="empty-icon">📭</div>
+      <p>No History</p>
+    </div>
+
+    <!-- Transactions Grid -->
+    <div id="transactionsList" class="transactions-grid" style="display: none;"></div>
+  </div>
+
+  <!-- External JavaScript for transactions page (CSP compliant) -->
+  <script src="js/transactions.js"></script>
+  <script src="js/mobile-utils.js" defer></script>
+  <script src="js/pwa-register.js" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="theme-color" content="#1a1a2e" />
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Withdraw — Black Rock</title>
+    <link rel="stylesheet" href="css/styles-new.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
+    <link rel="stylesheet" href="css/custom-deposit.css" />
+  </head>
+  <body class="custom-deposit-body">
+    <main class="custom-deposit-container">
+      <!-- Header with Back Button -->
+      <header class="custom-deposit-header">
+        <button id="backBtn" class="back-button" aria-label="Go back">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <div class="header-title">
+          <h1>Withdraw Funds</h1>
+          <p class="header-subtitle">Withdraw USDT (ERC20)</p>
+        </div>
+        <div class="header-spacer"></div>
+      </header>
+
+      <!-- Main Content -->
+      <div class="custom-deposit-content">
+        
+        <!-- Step 1: Available Balance -->
+        <section class="deposit-step" id="balanceStep">
+          <div class="step-header">
+            <span class="step-number">1</span>
+            <h2>Check Your Balance</h2>
+          </div>
+          
+          <div class="amount-input-wrapper">
+            <label class="amount-label">Available Balance</label>
+            <div class="amount-display-card">
+              <p class="amount-display-label">Your Balance</p>
+              <p class="amount-display-value" id="availableBalance">0.00 USDT</p>
+            </div>
+            <div class="amount-info">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+              <span id="minWithdrawText">Minimum withdrawal: $50 USDT</span>
+            </div>
+          </div>
+
+          <button id="proceedBalanceBtn" class="btn-proceed" disabled>
+            Proceed
+          </button>
+        </section>
+
+        <!-- Step 2: Withdrawal Address & Amount -->
+        <section class="deposit-step" id="addressAmountStep" style="display: none;">
+          <div class="step-header">
+            <span class="step-number">2</span>
+            <h2>Enter Withdrawal Details</h2>
+          </div>
+
+          <div class="address-display-section">
+            <!-- Network Info -->
+            <div class="network-badge">
+              <span class="network-icon">🔗</span>
+              <span class="network-name">ERC20 Network</span>
+            </div>
+
+            <!-- Withdrawal Address Input -->
+            <div class="address-card-custom">
+              <label for="withdrawalAddress" class="address-card-label">Your ERC20 Wallet Address</label>
+              <input
+                id="withdrawalAddress"
+                type="text"
+                placeholder="0x..."
+                class="address-text"
+                inputmode="text"
+                aria-label="ERC20 wallet address for withdrawal"
+              />
+              <div class="amount-info">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="16" x2="12" y2="12"/>
+                  <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <span>Enter a valid ERC20 address starting with 0x</span>
+              </div>
+            </div>
+
+            <!-- Withdrawal Amount -->
+            <div class="address-card-custom">
+              <label for="withdrawAmount" class="address-card-label">Withdrawal Amount (USDT)</label>
+              <div class="amount-input-container">
+                <input
+                  id="withdrawAmount"
+                  type="number"
+                  inputmode="decimal"
+                  min="50"
+                  step="0.01"
+                  placeholder="0.00"
+                  class="amount-input"
+                  aria-label="Withdrawal amount in USDT"
+                />
+                <span class="amount-currency">USDT</span>
+              </div>
+            </div>
+
+            <!-- Withdrawal Warning -->
+            <div class="warning-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              <div class="warning-text">
+                <p class="warning-title">⚠️ Important</p>
+                <p class="warning-message">Double-check your wallet address. Withdrawals to incorrect addresses cannot be recovered.</p>
+              </div>
+            </div>
+          </div>
+
+          <button id="nextToReviewBtn" class="btn-proceed" disabled>
+            Review Withdrawal
+          </button>
+        </section>
+
+        <!-- Step 3: Review & Confirm -->
+        <section class="deposit-step" id="reviewStep" style="display: none;">
+          <div class="step-header">
+            <span class="step-number">3</span>
+            <h2>Review & Confirm</h2>
+          </div>
+
+          <div class="address-display-section">
+            <div class="success-details">
+              <div class="detail-item">
+                <span class="detail-label">Amount:</span>
+                <span class="detail-value" id="reviewAmount">0.00 USDT</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Destination Address:</span>
+                <span class="detail-value" id="reviewAddress" style="word-break: break-all; font-size: 0.85rem;">0x...</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Network:</span>
+                <span class="detail-value">ERC20</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value" style="color: var(--warning);">Pending Confirmation</span>
+              </div>
+            </div>
+
+            <!-- Confirmation Warning -->
+            <div class="warning-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              <div class="warning-text">
+                <p class="warning-title">⚠️ Final Check</p>
+                <p class="warning-message">Once submitted, the withdrawal cannot be cancelled. Please verify all details are correct.</p>
+              </div>
+            </div>
+          </div>
+
+          <button id="confirmWithdrawBtn" class="btn-proceed">
+            Confirm Withdrawal
+          </button>
+        </section>
+
+        <!-- Success Message -->
+        <section class="deposit-step" id="successStep" style="display: none;">
+          <div class="success-container">
+            <div class="success-icon">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <h2 class="success-title">Withdrawal Submitted!</h2>
+            <p class="success-message">Your withdrawal request has been submitted successfully. You will receive your funds within 24-48 hours.</p>
+            <div class="success-details">
+              <div class="detail-item">
+                <span class="detail-label">Amount:</span>
+                <span class="detail-value" id="successAmount">0.00 USDT</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value" style="color: var(--warning);">Processing</span>
+              </div>
+            </div>
+          </div>
+
+          <button id="goToDashboardBtn" class="btn-proceed">
+            Go to Dashboard
+          </button>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <footer class="custom-deposit-footer">
+        <p class="footer-text">Questions? <a href="#" class="footer-link">Contact Support</a></p>
+      </footer>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p id="loadingText">Processing...</p>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="js/auth-shared.js"></script>
+    <script src="js/withdraw.js"></script>
+    <script src="js/mobile-utils.js" defer></script>
+    <script src="js/pwa-register.js" defer></script>
+  </body>
+</html>

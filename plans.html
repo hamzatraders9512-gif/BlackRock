@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Rock - Pricing Plans</title>
+  <link rel="stylesheet" href="css/styles-new.css">
+  <link rel="stylesheet" href="css/plans.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="assets/icon-glass-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+</head>
+<body>
+  <main class="plans-container">
+    <header class="plans-header">
+      <div class="logo">
+        <div class="logo-icon">◉</div>
+        <div class="logo-text"><span class="green">Black</span><span class="orange">Rock</span></div>
+      </div>
+      <h1 class="plans-title">Choose Your Profit Plan</h1>
+      <p class="plans-subtitle">Select the plan that best suits your investment strategy</p>
+    </header>
+
+    <!-- Custom Deposit (hidden unless triggered) -->
+    <div id="customDepositSection" style="display:none; max-width:420px; margin:16px auto; padding:16px; border-radius:8px; background:rgba(21,179,122,0.04); border:1px solid rgba(21,179,122,0.08);">
+      <h3 style="margin:0 0 8px;color:var(--green);">Custom Deposit</h3>
+      <form id="customDepositForm">
+        <label for="customAmount">Amount ($)</label>
+        <input id="customAmount" type="number" min="10" placeholder="Enter amount" required style="width:100%; padding:8px; margin:8px 0;">
+        <div style="display:flex;gap:8px;">
+          <button class="continue-btn" style="flex:1;">Proceed to Deposit</button>
+          <button type="button" id="cancelCustomDeposit" class="btn secondary" style="flex:1;">Back</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Plans grid -->
+    <section class="plans-grid">
+      <article class="plan-card basic-plan">
+        <div class="plan-header">
+          <div class="plan-icon">💎</div>
+          <h2>BASIC</h2>
+          <div class="plan-price"><span class="amount-value">50</span><span class="currency">USDT</span></div>
+        </div>
+        <p class="plan-description">Perfect for getting started with Black Rock's investment platform</p>
+        <ul class="plan-features">
+          <li><span class="feature-check">✔</span>Portfolio dashboard</li>
+          <li><span class="feature-check">✔</span>Daily 4% Growth</li>
+          <li><span class="feature-check">✔</span>14 days Withdrawal Period</li>
+          <li><span class="feature-check">✔</span>Basic Customer Support</li>
+          <li><span class="feature-check">✔</span>Limited Statistics</li>
+          <li><span class="feature-check">✔</span>Deposit and Withdrawals with Crypto</li>
+        </ul>
+        <button class="plan-btn basic-btn" data-plan="basic" data-amount="50">Deposit Now</button>
+      </article>
+
+      <article class="plan-card standard-plan featured">
+        <div class="plan-header">
+          <div class="plan-icon">🚀</div>
+          <h2>STRANDED</h2>
+          <div class="plan-price"><span class="amount-value">100</span><span class="currency">USDT</span></div>
+        </div>
+        <p class="plan-description">Balanced returns with faster withdrawals for active traders</p>
+        <ul class="plan-features">
+          <li><span class="feature-check">✔</span>Portfolio dashboard</li>
+          <li><span class="feature-check">✔</span>Daily 6% Growth</li>
+          <li><span class="feature-check">✔</span>7 days Withdrawal Period</li>
+          <li><span class="feature-check">✔</span>Priority support</li>
+          <li><span class="feature-check">✔</span>Unlimited Statistics</li>
+          <li><span class="feature-check">✔</span>Fast Transaction</li>
+        </ul>
+        <button class="plan-btn featured-btn" data-plan="standard" data-amount="100">Deposit Now</button>
+      </article>
+
+      <article class="plan-card premium-plan">
+        <div class="plan-header">
+          <div class="plan-icon">👑</div>
+          <h2>PREMIUM</h2>
+          <div class="plan-price"><span class="amount-value">500</span><span class="currency">USDT</span>+</div>
+        </div>
+        <p class="plan-description">Maximum returns, instant withdrawals and premium support</p>
+        <ul class="plan-features">
+          <li><span class="feature-check">✔</span>Portfolio dashboard</li>
+          <li><span class="feature-check">✔</span>Daily 8% Growth</li>
+          <li><span class="feature-check">✔</span>On Demand Withdrawals</li>
+          <li><span class="feature-check">✔</span>No Limits for Withdrawals</li>
+          <li><span class="feature-check">✔</span>Instant Withdrawals & Transactions</li>
+          <li><span class="feature-check">✔</span>Personal account manager</li>
+        </ul>
+        <button class="plan-btn premium-btn" data-plan="premium" data-amount="500">Deposit Now</button>
+      </article>
+    </section>
+
+    <!-- Footer area for plans page -->
+    <footer id="plansFooter" class="plans-footer" style="text-align:center; margin-top:24px;">
+      <p>Have questions? <a href="/contact.html">Contact Support</a></p>
+    </footer>
+
+    <!-- Enrollment Modal (hidden by default) -->
+    <div id="planModalBackdrop" class="modal-backdrop" style="display:none; position:fixed;inset:0;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;z-index:1200;">
+      <div class="modal" role="dialog" aria-modal="true" style="background:#fff; border-radius:10px; max-width:520px; width:92%; padding:20px; box-shadow:0 8px 30px rgba(0,0,0,0.2);">
+        <h3 id="modalPlanName" style="margin:0 0 8px;">Plan Name</h3>
+        <div id="modalPlanPrice" style="color:var(--muted); margin-bottom:12px;">Price</div>
+        <div id="modalFeatures" style="max-height:220px; overflow:auto; margin-bottom:12px;"></div>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button id="modalCancel" class="btn secondary">Cancel</button>
+          <button id="modalConfirm" class="btn primary">Proceed to Deposit</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
+  <script src="js/deposit-config.js"></script>
+  <script src="js/auth-shared.js"></script>
+  <script src="js/plans.js"></script>
+  <script src="js/mobile-utils.js" defer></script>
+  <script src="js/pwa-register.js" defer></script>
+</body>
+</html>
