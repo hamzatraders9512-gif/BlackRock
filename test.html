@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BlackRock Partner's Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --bg: #050505;
+  --card: rgba(15,15,15,0.95);
+  --border: rgba(255,255,255,0.06);
+  --text: #eaeaea;
+  --muted: #9a9a9a;
+
+  --silver: #bfc5cc;
+  --gold: #d4af37;
+  --platinum: #6ee7f9;
+
+  --accent: #6366f1;
+}
+
+/* Reset */
+* { margin:0; padding:0; box-sizing:border-box; font-family: Inter, system-ui, sans-serif; }
+
+body { background: var(--bg); color: var(--text); min-height:100vh; }
+
+/* Top Banner */
+.banner {
+  width: 100%;
+  background: linear-gradient(90deg, #111111, #222222);
+  padding: 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+}
+.banner h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+
+/* Container */
+.container { max-width:1200px; margin:auto; padding:32px 16px; }
+
+/* Grid */
+.grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:24px; }
+
+/* Card */
+.card {
+  background: var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+  transition: 0.25s ease;
+  position: relative;
+}
+
+.card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.1); }
+
+.card h3 { font-size:12px; color: var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
+
+.value { font-size:26px; font-weight:600; }
+
+/* Welcome card */
+.welcome { display:flex; flex-direction:column; gap:8px; }
+.welcome h2 { font-size:22px; font-weight:600; }
+.welcome span { color:var(--muted); font-size:14px; }
+
+/* Level inside card */
+.level-wrap { display:flex; align-items:center; gap:14px; margin-top:12px; }
+.level-icon { width:44px; height:44px; border-radius:50%; display:grid; place-items:center; font-size:18px; animation:pulse 2.5s infinite; }
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(255,255,255,0.3);} 70%{box-shadow:0 0 0 14px rgba(255,255,255,0);} 100%{box-shadow:0 0 0 0 rgba(255,255,255,0);} }
+
+.silver { background: rgba(191,197,204,0.15); color: var(--silver); }
+.gold { background: rgba(212,175,55,0.18); color: var(--gold); }
+.platinum { background: rgba(110,231,249,0.18); color: var(--platinum); }
+
+.level-name { font-weight:600; }
+
+/* Progress */
+.progress { height:6px; background: rgba(255,255,255,0.08); border-radius:999px; overflow:hidden; margin-top:12px; }
+.progress-bar { height:100%; width:0%; background: linear-gradient(90deg,var(--accent),#fff); transition: width 0.6s ease; }
+
+/* Referral link */
+.referral-box { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+input { flex:1; background:#0a0a0a; border:1px solid var(--border); border-radius:10px; padding:10px; color:var(--text); min-width:120px; }
+
+.referral-box button {
+  background:#111; border:1px solid var(--border); padding:8px 12px; border-radius:10px; color:var(--text);
+  cursor:pointer; flex:none; transition: transform 0.2s, background 0.2s;
+  font-size:14px;
+}
+.referral-box button:hover { transform: translateY(-2px); background:#1a1a1a; border-color: rgba(255,255,255,0.15); }
+
+/* Table */
+table { width:100%; border-collapse: collapse; margin-top:12px; }
+th, td { padding:12px; border-bottom:1px solid var(--border); font-size:14px; }
+th { color: var(--muted); }
+.badge { background: rgba(255,255,255,0.08); padding:6px 12px; border-radius:999px; }
+
+/* Mobile adjustments */
+@media (max-width:768px){
+  .grid { grid-template-columns: 1fr; }
+  .referral-box { flex-direction: column; }
+  .referral-box button { flex:1; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Top Banner -->
+<div class="banner">
+  <h1>BlackRock Partner's</h1>
+</div>
+
+<div class="container">
+
+<div class="grid">
+
+  <!-- Welcome card -->
+  <div class="card welcome">
+    <h2>Welcome back, Hamza 👋</h2>
+    <span>Here’s an overview of your affiliate performance</span>
+  </div>
+
+  <!-- Total referrals -->
+  <div class="card">
+    <h3>Total Referrals</h3>
+    <div class="value" id="totalRefs">28</div>
+  </div>
+
+  <!-- Reward + Level -->
+  <div class="card">
+    <h3>Reward Per Referral</h3>
+    <div class="value" id="rewardValue">$0</div>
+
+    <div class="level-wrap">
+      <div id="levelIcon" class="level-icon">◆</div>
+      <div>
+        <div class="level-name" id="levelName"></div>
+        <small id="levelInfo" style="color:var(--muted)"></small>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Referral Link -->
+<div class="card" style="margin-top:32px;">
+<h3>Your Referral Link</h3>
+  <div class="referral-box">
+  <input id="refLink" value="https://yourapp.com/register?ref=HAMZA123" readonly>
+  <button id="copyBtn">Copy</button>
+  <button id="shareBtn">Share</button>
+  <button id="qrBtn">QR</button>
+</div>
+</div>
+
+<!-- Line Chart for referrals -->
+<div class="card" style="margin-top:32px;">
+<h3>Daily Referral Registrations</h3>
+<canvas id="refChart" height="100"></canvas>
+</div>
+
+<!-- Recent Referrals -->
+<div class="card" style="margin-top:32px;">
+<h3>Recent Referrals</h3>
+<table>
+<thead>
+<tr><th>User</th><th>Date</th><th>Status</th><th>Reward</th></tr>
+</thead>
+<tbody>
+<tr><td>john@email.com</td><td>02 Jan 2026</td><td><span class="badge">Active</span></td><td>$10</td></tr>
+<tr><td>alice@email.com</td><td>29 Dec 2025</td><td><span class="badge">Active</span></td><td>$10</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<script src="js/test-inline.js" defer></script>
+
+</body>
+</html>

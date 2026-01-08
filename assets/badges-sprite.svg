@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SVG sprite for affiliate tier badges (Silver, Gold, Platinum)
+     Each symbol is designed as a compact vector 'hand-drawn' style badge
+-->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <!-- Silver medal (hand-drawn vector) -->
+  <symbol id="icon-silver" viewBox="0 0 120 120">
+    <defs>
+      <linearGradient id="silverGrad" x1="0" x2="1">
+        <stop offset="0%" stop-color="#eef2f6"/>
+        <stop offset="100%" stop-color="#c8ced6"/>
+      </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+      <circle cx="60" cy="52" r="36" fill="url(#silverGrad)" stroke="#9aa3ad" stroke-width="3"/>
+      <path d="M60 26 L68 44 L88 48 L72 62 L76 82 L60 70 L44 82 L48 62 L32 48 L52 44 Z" fill="#ffffff" opacity="0.06"/>
+      <rect x="46" y="86" width="28" height="24" rx="4" fill="#bfc7cf" transform="rotate(-6 60 98)"/>
+      <path d="M60 6 L68 40 L60 34 L52 40 Z" fill="#dfe6ec" opacity="0.25"/>
+    </g>
+  </symbol>
+
+  <!-- Gold star-medal -->
+  <symbol id="icon-gold" viewBox="0 0 120 120">
+    <defs>
+      <linearGradient id="goldGrad" x1="0" x2="1">
+        <stop offset="0%" stop-color="#fff3d6"/>
+        <stop offset="100%" stop-color="#f3bf4a"/>
+      </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+      <circle cx="60" cy="52" r="36" fill="url(#goldGrad)" stroke="#d3a43a" stroke-width="3"/>
+      <path d="M60 34 L68 56 L92 60 L72 76 L78 100 L60 88 L42 100 L48 76 L28 60 L52 56 Z" fill="#fff" opacity="0.06"/>
+      <rect x="42" y="86" width="36" height="24" rx="4" fill="#f7e2af" transform="rotate(4 60 98)"/>
+      <path d="M60 12 L72 42 L60 36 L48 42 Z" fill="#fff8e6" opacity="0.24"/>
+    </g>
+  </symbol>
+
+  <!-- Platinum crown badge -->
+  <symbol id="icon-platinum" viewBox="0 0 120 120">
+    <defs>
+      <linearGradient id="platGrad" x1="0" x2="1">
+        <stop offset="0%" stop-color="#dff8ff"/>
+        <stop offset="100%" stop-color="#8fdfff"/>
+      </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+      <rect x="24" y="36" width="72" height="64" rx="10" fill="url(#platGrad)" stroke="#66c9e6" stroke-width="3"/>
+      <path d="M30 44 L42 64 L60 44 L78 64 L90 44 L84 90 L60 78 L36 90 Z" fill="#fff" opacity="0.06"/>
+      <circle cx="60" cy="64" r="8" fill="#ffffff" opacity="0.06" />
+    </g>
+  </symbol>
+</svg>

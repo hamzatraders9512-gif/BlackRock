@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BlackRock Partner's Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Chart.js proxied via server (CDN fallback included before affiliate.js) -->
+<script src="/vendor/chart.umd.min.js"></script>
+
+<style>
+:root {
+  /* Brand tokens (refined, elegant dark theme) */
+  --bg: #07080a;
+  --card: rgba(12,13,15,0.95);
+  --border: rgba(255,255,255,0.04);
+  --text: #e7eef6;
+  --muted: #98a0a8;
+  --accent: #6c5ce7;
+  --accent-2: #4f7cff;
+  --success: #34d399;
+  --danger: #fb7185;
+  --glass: rgba(255,255,255,0.02);
+  --radius: 16px;
+  --space: 24px;
+  --card-shadow: 0 8px 30px rgba(2,6,23,0.6);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+.banner{width:100%;background:linear-gradient(90deg,rgba(0,0,0,0.35),rgba(0,0,0,0.1));padding:22px 20px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center}
+.banner h1{font-size:26px;font-weight:700;color:var(--text);letter-spacing:1px}
+.container{max-width:1200px;margin:auto;padding:32px 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;box-shadow:var(--card-shadow)}
+.card h3{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.card h3.total-referrals{font-size:14px;color:var(--text);letter-spacing:0;text-transform:none}
+.value{font-size:26px;font-weight:600}
+.welcome{display:flex;flex-direction:column;gap:8px}
+.welcome h2{font-size:22px;font-weight:600}
+.welcome h2{color:var(--text)}
+.welcome span{color:var(--muted);font-size:14px}
+.level-wrap{display:flex;align-items:center;gap:14px;margin-top:12px}
+.level-icon{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:18px}
+.progress{height:6px;background:rgba(255,255,255,0.04);border-radius:999px;overflow:hidden;margin-top:12px}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 0.6s}
+.referral-box{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+input{flex:1;background:rgba(0,0,0,0.35);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text)}
+.referral-box button{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid var(--border);padding:9px 14px;border-radius:10px;color:var(--text);cursor:pointer;transition:transform 150ms ease,box-shadow 180ms ease,background 140ms ease}
+.referral-box button:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(76,61,171,0.08)}
+.referral-box button:active{transform:translateY(-1px)}
+.referral-box button:focus{outline:2px solid rgba(108,92,231,0.18);outline-offset:2px}
+
+/* QR popover styling (anchored to QR button) */
+.qr-popover{position:absolute;right:8px;top:calc(100% + 12px);width:240px;z-index:1200;display:flex;justify-content:center;transition:opacity 160ms ease,transform 160ms ease;opacity:0;transform:translateY(-6px);pointer-events:none}
+.qr-popover[hidden]{opacity:0;transform:translateY(-6px);pointer-events:none}
+.qr-popover:not([hidden]){opacity:1;transform:translateY(0);pointer-events:auto}
+.qr-popover .small{padding:6px 8px;font-size:0.85rem;border-radius:6px;background:#111;border:1px solid var(--border);color:var(--text);cursor:pointer;transition:transform 120ms}
+.qr-popover .small:hover{transform:translateY(-2px)}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{padding:12px;border-bottom:1px solid var(--border);font-size:14px}
+th{color:var(--muted)}
+.badge{background:rgba(255,255,255,0.08);padding:6px 12px;border-radius:999px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.referral-box{flex-direction:column}.referral-box button{flex:1}}
+
+/* Affiliate QR modal (same style as dashboard) */
+.qr-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; }
+.qr-modal .modal-card { background: var(--bg,#071027); color: #fff; padding: 1rem; border-radius: 10px; width: 360px; max-width: calc(100% - 32px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.04); }
+.qr-modal .modal-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem }
+.qr-modal .modal-title { font-weight:700; font-size:1rem }
+.qr-modal .modal-body { display:flex;flex-direction:column;gap:0.6rem;align-items:center }
+.qr-modal .modal-footer { display:flex;gap:0.5rem;justify-content:flex-end;margin-top:0.6rem }
+.qr-modal .link-display { font-family: monospace; font-size:0.86rem; background: rgba(255,255,255,0.02); padding:0.45rem 0.6rem; border-radius:6px; width:100%; overflow:auto; text-align:center }
+.qr-modal .small-muted { font-size:0.82rem; color:rgba(255,255,255,0.6) }
+/* Stage badge animations */
+.stage-badge.pop{display:inline-flex;align-items:center;gap:8px;animation:pop 420ms cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+.stage-badge.pulse .stage-icon{animation:pulse 1.6s ease-in-out infinite;filter:drop-shadow(0 10px 30px rgba(99,102,241,0.12))}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+/* Continuous Silver badge animation */
+.stage-badge.silver .stage-icon{animation:shimmer 3.2s ease-in-out infinite;transform-origin:center;filter:drop-shadow(0 6px 20px rgba(99,102,241,0.06))}
+@keyframes shimmer{0%{transform:translateY(0) rotate(0) scale(1)}25%{transform:translateY(-2px) rotate(-1.2deg) scale(1.01)}50%{transform:translateY(0) rotate(0) scale(1)}75%{transform:translateY(-1px) rotate(1deg) scale(1.01)}100%{transform:translateY(0) rotate(0) scale(1)}}
+/* Recent referrals professional list styles (brand refined) */
+.card.recent-referrals{padding:22px}
+.card.recent-referrals h3{font-size:13px;margin-bottom:14px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+  .card.recent-referrals .table-responsive{overflow:auto;padding-top:6px}
+  /* New list layout for recent referrals */
+  .recent-list{display:flex;flex-direction:column;gap:8px}
+  .recent-list-head{display:flex;gap:12px;padding:10px 6px;color:var(--muted);font-weight:700;font-size:12px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .recent-list .col{padding:8px 6px}
+  .recent-list .col-user{flex:1;min-width:160px}
+  .recent-list .col-date{width:20%;text-align:center}
+  .recent-list .col-status{width:18%;text-align:center}
+  .recent-list .col-reward{width:12%;text-align:right}
+
+  .recent-item{display:flex;align-items:center;gap:12px;padding:14px 6px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.008),transparent);border-bottom:1px solid rgba(255,255,255,0.02);transition:transform 120ms ease,box-shadow 160ms ease}
+  .recent-item:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(6,8,12,0.6)}
+  .recent-item .col-user{display:flex;align-items:center;gap:14px}
+  .recent-item .user-avatar{width:44px;height:44px;border-radius:10px;display:inline-grid;place-items:center;font-weight:700;background:linear-gradient(135deg,rgba(108,92,231,0.14),rgba(79,124,255,0.08));color:var(--text);border:1px solid rgba(255,255,255,0.03);font-size:14px}
+  .recent-item .user-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+  .recent-empty{padding:12px 6px;color:var(--muted)}
+  /* column widths aligned with colgroup: 50 / 20 / 18 / 12 */
+  .card.recent-referrals thead th:first-child{width:50%;text-align:left}
+  .card.recent-referrals thead th:nth-child(2){width:20%;text-align:center}
+  .card.recent-referrals thead th:nth-child(3){width:18%;text-align:center}
+  .card.recent-referrals thead th:nth-child(4){width:12%;text-align:right}
+  .card.recent-referrals tbody tr td:first-child{width:50%;}
+  .card.recent-referrals tbody tr td:nth-child(2){width:20%;text-align:center}
+  .card.recent-referrals tbody tr td:nth-child(3){width:18%;text-align:center}
+  .card.recent-referrals tbody tr td:nth-child(4){width:12%;text-align:right;color:var(--text)}
+  .card.recent-referrals td.date-cell{display:flex;justify-content:center;align-items:center;white-space:nowrap}
+  .card.recent-referrals td.reward-cell{text-align:right;white-space:nowrap}
+  .card.recent-referrals tbody tr td .muted{color:var(--muted)}
+  .card.recent-referrals tbody tr:hover td{background:rgba(255,255,255,0.01)}
+  .card.recent-referrals{margin-top:20px}
+
+  /* User cell with avatar */
+  .card.recent-referrals .user-cell{display:flex;align-items:center;gap:12px;overflow:hidden}
+  .card.recent-referrals .user-avatar{width:40px;height:40px;border-radius:50%;display:inline-grid;place-items:center;font-weight:700;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));color:var(--text);border:1px solid rgba(255,255,255,0.03);font-size:14px}
+  .card.recent-referrals .user-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* Status pill with colored dot */
+  .status-pill{position:relative;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
+  .status-pill::before{content:'';width:9px;height:9px;border-radius:50%;display:inline-block}
+  .status-pill.status-pending{background:rgba(255,197,107,0.04);color:#ffb84d;border:1px solid rgba(255,197,107,0.06)}
+  .status-pill.status-pending::before{background:#ffb84d}
+  .status-pill.status-approved{background:rgba(52,211,153,0.06);color:var(--success);border:1px solid rgba(52,211,153,0.04)}
+  .status-pill.status-approved::before{background:var(--success)}
+  .status-pill.status-rejected{background:rgba(251,113,133,0.04);color:var(--danger);border:1px solid rgba(251,113,133,0.04)}
+  .status-pill.status-rejected::before{background:var(--danger)}
+
+  /* Header alignment */
+  .card.recent-referrals thead th.th-user{text-align:left}
+  .card.recent-referrals thead th.th-date{text-align:center}
+  .card.recent-referrals thead th.th-status{text-align:center}
+  .card.recent-referrals thead th.th-reward{text-align:right}
+
+/* Responsive: collapse table into stacked cards on small screens */
+@media (max-width: 780px) {
+  .card.recent-referrals .table-responsive{padding:0}
+  .card.recent-referrals table{min-width:unset}
+  .card.recent-referrals thead{display:none}
+  .card.recent-referrals tbody tr{display:block;border-bottom:none;padding:10px 12px;margin-bottom:12px;background:rgba(255,255,255,0.01);border-radius:10px}
+  .card.recent-referrals tbody tr td{display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:none}
+  .card.recent-referrals tbody tr td[data-label]:before{content:attr(data-label);display:inline-block;color:var(--muted);font-size:12px;margin-right:8px}
+  .card.recent-referrals tbody tr td:first-child{font-weight:600}
+  .card.recent-referrals tbody tr td:nth-child(3){justify-content:flex-end}
+}
+</style>
+</head>
+<body>
+
+<div class="banner"><h1>BlackRock Partner's</h1></div>
+
+<div class="container">
+
+  <div class="grid">
+    <div class="card welcome">
+      <h2 id="userFullName">Welcome back, User 👋</h2>
+      <span>Here’s an overview of your affiliate performance</span>
+    </div>
+
+    <div class="card">
+      <h3 class="total-referrals">Total Referrals</h3>
+      <div class="value" id="refCountBig">0</div>
+      <div style="margin-top:8px;color:var(--muted);font-size:13px">
+        <span id="rewardLabel">Reward per referral</span>
+        <div style="margin-top:6px" class="small muted"><span class="reward-amount" id="rewardValue"></span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Total Commission</h3>
+      <div class="value" id="totalCommission">$0</div>
+      <div class="level-wrap">
+        <div id="levelIcon" class="level-icon">◆</div>
+        <div>
+          <div class="level-name" id="levelName">Silver</div>
+          <small id="levelInfo" style="color:var(--muted)">0–10 referrals</small>
+        </div>
+      </div>
+      <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:32px;">
+    <h3>Your Referral Link</h3>
+    <div class="referral-box" style="position:relative">
+      <div id="referralLink" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:#0a0a0a;color:var(--text);min-width:140px;">Loading…</div>
+      <button id="copyRefBtn">Copy</button>
+      <button id="shareRefBtn">Share</button>
+      <button id="qrBtn" aria-expanded="false" aria-controls="qrPopover">QR</button>
+
+      <div id="qrPopover" class="qr-popover" hidden>
+        <div style="background:var(--card);border:1px solid var(--border);padding:12px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,0.6);">
+          <div class="qr-box" style="background:#fff;padding:8px;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+            <div id="qrInline" style="width:180px;height:180px;display:grid;place-items:center"></div>
+          </div>
+          <div style="display:flex;gap:8px;width:100%;justify-content:center;">
+            <button id="downloadQrInline" class="small">Download</button>
+            <button id="closeQrInline" class="small">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:32px;">
+    <h3>Daily Referral Registrations</h3>
+    <canvas id="refChart" height="140" style="height:220px;min-height:120px;max-height:320px;"></canvas>
+  </div>
+
+  <div class="card recent-referrals" style="margin-top:32px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px">
+      <h3 style="margin:0">Recent Referrals</h3>
+      <div style="color:var(--muted);font-size:13px">Showing latest 10</div>
+    </div>
+
+    <div class="table-responsive">
+      <div class="recent-list" id="refTxList" role="list" aria-describedby="recentReferralsDesc">
+        <div id="recentReferralsDesc" style="display:none">Latest affiliate signups referred by you</div>
+        <div class="recent-list-head" aria-hidden="true">
+          <div class="col col-user">User</div>
+          <div class="col col-date">Date</div>
+          <div class="col col-status">Status</div>
+          <div class="col col-reward">Reward</div>
+        </div>
+        <div class="recent-empty muted">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+<script src="js/affiliate.js"></script>
+
+<!-- Centered QR Modal removed: restored inline popover layout -->
+
+</body>
+</html>
